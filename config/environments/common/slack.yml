@@ -1,0 +1,10 @@
+---
+message_url: "https://slack.com/api/chat.postMessage"
+webhook_message_url: "https://hooks.slack.com/services/YOUR/SLACK/TOKEN"
+user_info_url: "https://slack.com/api/users.info"
+api_token: YOUR_API_TOKEN
+webhook_token: YOUR_WEBHOOK_TOKEN
+command_tokens:
+  giffy: YOUR_COMMAND_TOKEN
+  latex: YOUR_COMMAND_TOKEN
+  glare: YOUR_COMMAND_TOKEN

@@ -1,0 +1,2 @@
+---
+image_search_url_template: "https://www.google.com/search{?query*}"

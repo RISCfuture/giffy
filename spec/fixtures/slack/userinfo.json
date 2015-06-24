@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "user": {
+    "id": "U02AY8HK2",
+    "name": "tim",
+    "deleted": false,
+    "status": null,
+    "color": "8d4b84",
+    "real_name": "Tim Morgan",
+    "tz": null,
+    "tz_label": "Pacific Daylight Time",
+    "tz_offset": -25200,
+    "profile": {
+      "first_name": "Tim",
+      "last_name": "Morgan",
+      "skype": "RISCfuture",
+      "phone": "4045551212",
+      "title": "Software engineer",
+      "image_24": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2014-08-12/2535910144_24.jpg",
+      "image_32": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2014-08-12/2535910144_32.jpg",
+      "image_48": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2014-08-12/2535910144_48.jpg",
+      "image_72": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2014-08-12/2535910144_72.jpg",
+      "image_192": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2014-08-12/2535910144_192.jpg",
+      "image_original": "https://s3-us-west-2.amazonaws.com/slack-files2/avatars/2014-08-12/2535910144_original.jpg",
+      "real_name": "Tim Morgan",
+      "real_name_normalized": "Tim Morgan",
+      "email": "tim@testdomain.com"
+    },
+    "is_admin": true,
+    "is_owner": false,
+    "is_primary_owner": false,
+    "is_restricted": false,
+    "is_ultra_restricted": false,
+    "is_bot": false,
+    "has_files": true,
+    "has_2fa": false
+  }
+}

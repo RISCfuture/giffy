@@ -1,0 +1,15 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta name="description" content="Giffy"
+    meta name="author" content="Tim Morgan"
+    = csrf_meta_tags
+
+    title giffy
+
+    = stylesheet_link_tag 'application'
+
+  body class=controller_name.gsub('/', '-') id="#{controller_name.gsub('/', '-')}-#{action_name}"
+    = yield
+    = javascript_include_tag 'application'
