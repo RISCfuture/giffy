@@ -39,10 +39,12 @@ $#{latex}$
     latex.gsub('$', '\\$')
   end
 
+
+  # @private
+  PDFTEX_BINARIES = %w(pdflatex pdftex)
   def convert(latex)
-    unless system('which', 'pdflatex')
-      raise LaTeXError, "LaTeX not installed"
-    end
+    pdftex = PDFTEX_BINARIES.detect { |b| system 'which', b }
+    raise LaTeXError, "LaTeX not installed" unless pdftex
 
     ident = Digest::MD5.hexdigest(latex)
 
@@ -51,7 +53,7 @@ $#{latex}$
     tex_file.close
 
     Dir.mktmpdir(ident) do |output_directory|
-      system 'pdflatex', '-interaction=nonstopmode', "--output-directory=#{output_directory}", tex_file.path
+      system pdftex, '-interaction=nonstopmode', "--output-directory=#{output_directory}", tex_file.path
 
       pdf_path = File.join(output_directory, File.basename(tex_file.path, '.tex') + '.pdf')
       raise LaTeXError, "Invalid LaTeX" unless File.exist?(pdf_path)
