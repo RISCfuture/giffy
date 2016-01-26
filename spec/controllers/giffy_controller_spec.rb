@@ -4,8 +4,8 @@ RSpec.describe GiffyController, type: :controller do
   describe '/giffy' do
     it "should return a Google image search" do
       FakeWeb.register_uri :get,
-                           'http://ajax.googleapis.com/ajax/services/search/images?imgtype=animated&q=coolio&rsz=8&safe=high&userip=0.0.0.0&v=1.0',
-                           body: fixture_file('google', 'gif_results.json')
+                           'https://www.google.com/search?as_q=coolio&as_st=y&gws_rd=ssl&tbm=isch&tbs=itp%3Aanimated',
+                           body: fixture_file('google', 'gif_results.html')
       stub_user_info
       FakeWeb.register_uri :post,
                            /^https:\/\/hooks\.slack\.com\/services\//,
@@ -20,14 +20,14 @@ RSpec.describe GiffyController, type: :controller do
       expect(result['channel']).to eql('G048VLWL7')
       expect(result['text']).to match(/^https?:\/\//)
       expect(result['username']).to eql('Giffy')
-      expect(result['icon_url']).to eql('http://test.host/assets/giffy.png')
+      expect(result['icon_url']).to start_with('http://test.host/assets/giffy')
       expect(result['icon_emoji']).to be_nil
     end
 
     it "should return a private sad response when there are no matches" do
       FakeWeb.register_uri :get,
-                           'http://ajax.googleapis.com/ajax/services/search/images?imgtype=animated&q=dfgonj%3Begrs%3Bhiuogaewr%3Buhjigwar%3Bhuiowaegrv&rsz=8&safe=high&userip=0.0.0.0&v=1.0',
-                           body: fixture_file('google', 'no_results.json')
+                           'https://www.google.com/search?as_q=dfgonj%3Begrs%3Bhiuogaewr%3Buhjigwar%3Bhuiowaegrv&as_st=y&gws_rd=ssl&tbm=isch&tbs=itp%3Aanimated',
+                           body: fixture_file('google', 'no_results.html')
       stub_user_info
 
       test_slash_command 'giffy', :search, text: 'dfgonj;egrs;hiuogaewr;uhjigwar;huiowaegrv'

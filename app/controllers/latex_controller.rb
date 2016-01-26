@@ -40,6 +40,10 @@ $#{latex}$
   end
 
   def convert(latex)
+    unless system('which', 'pdflatex')
+      raise LaTeXError, "LaTeX not installed"
+    end
+
     ident = Digest::MD5.hexdigest(latex)
 
     tex_file = Tempfile.new([ident, '.tex'])
