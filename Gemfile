@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # FRAMEWORK
-gem 'rails', '4.2.5.1'
+gem 'rails', '4.2.5.2'
 gem 'configoro'
 
 # MODELS
