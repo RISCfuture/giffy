@@ -149,9 +149,3 @@ Testing
 Testing slash-commands is done using RSpec. See the `spec/controllers`
 directory for examples of how to test slash-commands using specs. Run specs with
 `rspec spec`.
-
-Deployment
-----------
-
-This is a Heroku application. It will automatically deploy when commits are
-pushed to the remote.
