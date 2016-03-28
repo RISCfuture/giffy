@@ -8,16 +8,6 @@ gem 'configoro'
 gem 'pg'
 gem 'find_or_create_on_scopes'
 
-# CSS
-gem 'sass-rails'
-gem 'slim-rails'
-
-# JS
-gem 'uglifier'
-gem 'coffee-rails'
-gem 'jquery-rails'
-gem 'jbuilder'
-
 # API
 gem 'addressable'
 gem 'faraday'
