@@ -27,11 +27,13 @@ class Google
     raise InvalidResponseError, "Invalid response from Google: #{response.status}" if response.status/100 != 2
 
     html = Nokogiri::HTML(response.body)
-    html.css('a.rg_l').map do |l|
-      url = l.attributes['href'].value
-      uri = Addressable::URI.parse(url)
-      uri.query_values['imgurl']
-    end
+    html.css('div.rg_meta').map do |meta|
+      begin
+        JSON.parse(meta.content)['ou']
+      rescue
+        nil
+      end
+    end.compact
   end
 
   private
@@ -42,13 +44,12 @@ class Google
 
   def image_search_url(query)
     image_search_template.expand(query: {
-
-                                     as_st:  'y',
-                                     tbm:    'isch',
-                                     as_q:   query,
-                                     tbs:    'itp:animated',
-                                     gws_rd: 'ssl'
-                                 })
+        as_st:  'y',
+        tbm:    'isch',
+        as_q:   query,
+        tbs:    'itp:animated',
+        gws_rd: 'ssl'
+    })
   end
 
   # Raised when a Google API request fails.
