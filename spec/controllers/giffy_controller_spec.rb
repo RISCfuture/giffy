@@ -4,7 +4,7 @@ RSpec.describe GiffyController, type: :controller do
   describe '/giffy' do
     it "should return a Google image search" do
       FakeWeb.register_uri :get,
-                           'https://www.google.com/search?as_q=coolio&as_st=y&gws_rd=ssl&tbm=isch&tbs=itp%3Aanimated',
+                           /^https:\/\/www\.google\.com\/search/,
                            body: fixture_file('google', 'gif_results.html')
       stub_user_info
       FakeWeb.register_uri :post,
@@ -26,7 +26,7 @@ RSpec.describe GiffyController, type: :controller do
 
     it "should return a private sad response when there are no matches" do
       FakeWeb.register_uri :get,
-                           'https://www.google.com/search?as_q=dfgonj%3Begrs%3Bhiuogaewr%3Buhjigwar%3Bhuiowaegrv&as_st=y&gws_rd=ssl&tbm=isch&tbs=itp%3Aanimated',
+                           /^https:\/\/www\.google\.com\/search/,
                            body: fixture_file('google', 'no_results.html')
       stub_user_info
 
