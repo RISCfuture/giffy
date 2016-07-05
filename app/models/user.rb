@@ -13,7 +13,7 @@ require 'slack'
 # | `slack_id` | The Slack-assigned user ID.                                       |
 # | `info`     | JSON-formatted information returned by the `user.info` Slack API. |
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   # The length of time before cached data is invalidated.
   TTL = 1.day
 

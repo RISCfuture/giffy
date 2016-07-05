@@ -1,5 +1,5 @@
-credentials = Aws::SharedCredentials.new
-unless credentials.loadable?
+credentials = Aws::SharedCredentials.new rescue nil
+unless credentials&.loadable?
   credentials = Aws::Credentials.new(Giffy::Configuration.aws.access_key_id,
                                      Giffy::Configuration.aws.secret_access_key)
 end

@@ -57,17 +57,17 @@ RSpec.configure do |config|
 end
 
 def test_slash_command(command, action, overrides={})
-  post action, overrides.reverse_merge(
-                 channel_id:   'G048VLWL7',
-                 channel_name: 'privategroup',
-                 command:      "/#{command}",
-                 team_domain:  'square',
-                 team_id:      'T024FALR8',
-                 text:         '',
-                 token:        Giffy::Configuration.slack.command_tokens[command],
-                 user_id:      'U02AY8HK2',
-                 user_name:    'tim'
-             )
+  post action, params: overrides.reverse_merge(
+      channel_id:   'G048VLWL7',
+      channel_name: 'privategroup',
+      command:      "/#{command}",
+      team_domain:  'square',
+      team_id:      'T024FALR8',
+      text:         '',
+      token:        Giffy::Configuration.slack.command_tokens[command],
+      user_id:      'U02AY8HK2',
+      user_name:    'tim'
+  )
 end
 
 def fixture_file(*path)
