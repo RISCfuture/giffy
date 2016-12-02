@@ -130,6 +130,21 @@ class Slack
 
   class Command < Struct.new(:token, :team_id, :team_domain, :channel_id, :channel_name, :user_id, :user_name, :command, :text)
 
+    # @overload initialize(token, team_id, team_domain, channel_id, channel_name, user_id, user_name, command, text)
+    #  Creates a new command from the given parameters.
+    # @overload initialize(hash)
+    #  Creates a new command from the given hash.
+    #  @param [Hash<Symbol, String>] hash Command attributes.
+
+    def initialize(*args)
+      if args.size == 1 && args.first.kind_of?(Hash)
+        hsh = args.first.with_indifferent_access
+        super *members.map { |m| hsh[m] }
+      else
+        super
+      end
+    end
+
     # @return [Hash] Information about the user, using the {User} model.
 
     def user_info!

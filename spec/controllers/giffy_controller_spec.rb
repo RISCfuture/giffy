@@ -23,17 +23,5 @@ RSpec.describe GiffyController, type: :controller do
       expect(result['icon_url']).to start_with('http://test.host/assets/giffy')
       expect(result['icon_emoji']).to be_nil
     end
-
-    it "should return a private sad response when there are no matches" do
-      FakeWeb.register_uri :get,
-                           /^https:\/\/www\.google\.com\/search/,
-                           body: fixture_file('google', 'no_results.html')
-      stub_user_info
-
-      test_slash_command 'giffy', :search, text: 'dfgonj;egrs;hiuogaewr;uhjigwar;huiowaegrv'
-
-      expect(response.status).to eql(404)
-      expect(response.body).to eql("Giffy couldn’t find a matching GIF :(")
-    end
   end
 end

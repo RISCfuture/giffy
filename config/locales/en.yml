@@ -34,7 +34,11 @@ en:
   controllers:
     giffy:
       search:
-        no_results: "Giffy couldn’t find a matching GIF :("
+        no_results:
+        - "Couldn’t find a matching GIF :("
+        - Got nothing for ya, sorry.
+        - Comin’ up blank.
+        - No results ¯\_(ツ)_/¯
     application:
       validate_command:
         invalid: Invalid Slack command token.

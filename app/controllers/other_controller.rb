@@ -6,18 +6,18 @@ class OtherController < ApplicationController
   before_action :validate_command
   report_errors_to_slack
 
-  # Prepends the glare emoticon to a message.
+  # Runs when `/glare` is invoked. Prepends the glare emoticon to a message.
 
   def glare
-    text = [ GLARE_EMOTICON, command.text ].select(&:present?).join(' ')
-    Slack.instance.echo command, text: text
+    text = [GLARE_EMOTICON, command.text].select(&:present?).join(' ')
+    EchoJob.perform_later command.to_h, text
     head :ok
   end
 
-  # Displays the "Spagott" image.
+  # Runs when `/spagott` is invoked. Displays the "Spagott" image.
 
   def spagott
-    Slack.instance.echo command, text: view_context.image_url('spagott.jpg')
+    EchoJob.perform_later command.to_h, view_context.image_url('spagott.jpg')
     head :ok
   end
 end
