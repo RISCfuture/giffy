@@ -7,11 +7,6 @@ Web-based driver for the following Slack commands:
   Google Image Search. Dispatched to {GiffyController#search}.
 * **/latex _[code]_**: Renders _[code]_ as a LaTeX image.
 * **/glare _[message]_**: Prepends glare-eyes to a message.
-* **/gotti**: Displays a random
-  [@Shit_Gotti_Says](https://twitter.com/Shit_Gotti_Says) quote. Dispatched to
-  {TweetsController#gotti}.
-* **/ohsq**: Displays a random [@ohsq](https://twitter.com/ohsq) quote.
-  Dispatched to {TweetsController#ohsq}.
 
 Getting Started
 ---------------
@@ -69,29 +64,18 @@ Slack Commands
 
 ### /giffy
 
-Uses the {Google} helper class to perform a Google image search.
-
-### /gotti and /ohsq
-
-Uses the {Tweet} model to load a random quote from the respective Twitter
-account.
-
-Tweets are loaded using the {TwitterIntegration} helper by a scheduled cron job
-and cached locally as Tweet records. Twitter API integration is done via the
-`@riscfuture` user, which `@ohsq` has granted permissions to (for now).
+Uses the {Google} helper class to perform a Google image search. See
+{GiffyController}.
 
 ### /latex
 
 Uses The `pdflatex` binary to render a LaTeX math snippet to a PDF file, and
 then ImageMagick to convert it to an image, and then AWS S3 to upload the image.
+See {LatexController}.
 
 ### /glare
 
-Prepends glare-eyes to a message.
-
-### /spagott
-
-Displays the Spagott image.
+Prepends glare-eyes to a message. See {OtherController}.
 
 API Integration
 ---------------
@@ -117,11 +101,11 @@ To add your own command, first
 on Slack. Choose a URL for it of the format
 `https://square-giffy.herokuapp.com/COMMAND_NAME`, replacing `COMMAND_NAME` as
 appropriate.
- 
+
 Slack will automatically generate a command token for you. Paste this token into
 the `config/environments/common/slack.yml` file, associating it with your
 command name (without the leading slash).
- 
+
 Add an entry to `config/routes.rb` with your `COMMAND_NAME` path, dispatching it
 to a new or existing controller/action combo as you see fit.
 

@@ -13,11 +13,4 @@ class OtherController < ApplicationController
     EchoJob.perform_later command.to_h, text
     head :ok
   end
-
-  # Runs when `/spagott` is invoked. Displays the "Spagott" image.
-
-  def spagott
-    EchoJob.perform_later command.to_h, view_context.image_url('spagott.jpg')
-    head :ok
-  end
 end
