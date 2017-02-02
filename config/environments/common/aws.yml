@@ -1,3 +1,6 @@
+---
 access_key_id: YOUR_ACCESS_KEY_ID
 secret_access_key: YOUR_SECRET_ACCESS_KEY
-region: us-west-1
+region: YOUR_REGION
+bucket: YOUR_BUCKET
+url_template: "https://{bucket}.s3-{region}.amazonaws.com/{key}"

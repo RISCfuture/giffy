@@ -1,134 +1,133 @@
 require 'addressable/uri'
+require 'addressable/template'
 
 class Slack
   include Singleton
 
-  # Simulates a slash-command echo by temporarily impersonating a user and
-  # posting the command they just sent.
+  # Invokes a Slack API command.
   #
-  # @param [Slack::Command] command Command information used to impersonate the
-  #   user and post the echo message.
-  # @return [Hash] The response from Slack.
-  # @raise [Slack::InvalidResponseError] If the API call is unsuccessful.
+  # @param [String] command The Slack API command, such as "chat.postMessage".
+  # @param [Hash<Symbol,String>] options Options for that API command (see the
+  #   Slack API documentation).
+  # @return [Hash] The API command response, de-serialized from JSON.
+  # @raise [Slack::Error] If the response is not 200 OK or an error occurs.
 
-  def echo(command, text: nil)
-    userinfo  = User.load(command.user_id)
-    user_icon = userinfo['user']['profile']['image_48']
-    username  = userinfo['user']['profile']['real_name'] || userinfo['user']['name']
-    webhook_post webhook_message_url,
-                 text:     (text || "#{command.command} #{command.text}").strip,
-                 channel:  command.channel_id,
-                 username: username,
-                 icon_url: user_icon
-  end
-
-  # Loads user information from Slack. Used by the {User} class to cache user
-  # information.
-  #
-  # @param [String] user_id The Slack-assigned user ID (not username).
-  # @return [Hash] User information returned by Slack.
-  # @raise [Slack::InvalidResponseError] If the API call is unsuccessful.
-
-  def user_info(user_id)
-    post user_info_url, user: user_id
-  end
-
-  # Posts a message to a Slack channel. This uses the `chat.postMessage` API,
-  # which has limitations; namely, it can only post to channels that `@tim` is a
-  # member of, or that are public.
-  #
-  # @param [String] recipient The channel name or ID.
-  # @param [String] message The message to post.
-  # @param [String] username The username the bot should appear as.
-  # @param [String] icon_url The URL to an image that should be the bot's
-  #   avatar.
-  # @param [String] icon_emoji The name of an emoji (such as ":pizza:") that
-  #   should be the bot's avatar. Takes precedence over `icon_url`.
-  # @return [Hash] The response from Slack.
-  # @raise [Slack::InvalidResponseError] If the API call is unsuccessful.
-
-  def message(recipient, message, username: 'Giffy', icon_url: nil, icon_emoji: nil)
-    post message_url,
-         text:       message,
-         channel:    recipient,
-         username:   username,
-         icon_url:   icon_url,
-         icon_emoji: icon_emoji
-  end
-
-  # Posts a message to a Slack channel. This uses the Incoming Webhooks API,
-  # which can post to any channel from which a slash-command is received.
-  #
-  # @param [String] recipient The channel name or ID.
-  # @param [String] message The message to post.
-  # @param [String] username The username the bot should appear as.
-  # @param [String] icon_url The URL to an image that should be the bot's
-  #   avatar.
-  # @param [String] icon_emoji The name of an emoji (such as ":pizza:") that
-  #   should be the bot's avatar. Takes precedence over `icon_url`.
-  # @return [Hash] The response from Slack.
-  # @raise [Slack::InvalidResponseError] If the API call is unsuccessful.
-
-  def webhook_message(recipient, message, username: 'Giffy', icon_url: nil, icon_emoji: nil, attachments: nil)
-    webhook_post webhook_message_url,
-                 text:        message,
-                 channel:     recipient,
-                 username:    username,
-                 icon_url:    icon_url,
-                 icon_emoji:  icon_emoji,
-                 attachments: attachments
+  def api_command(command, options={})
+    post api_url(command), options
   end
 
   private
 
-  def user_info_url
-    @user_info_url ||= Addressable::URI.parse(Giffy::Configuration.slack.user_info_url)
-  end
-
-  def message_url
-    @message_url ||= Addressable::URI.parse(Giffy::Configuration.slack.message_url)
-  end
-
-  def webhook_message_url
-    @webhook_message_url ||= Addressable::URI.parse(Giffy::Configuration.slack.webhook_message_url)
+  def api_url(command)
+    @@api_url_template ||= Addressable::Template.new(Giffy::Configuration.slack.api_url_template)
+    @@api_url_template.expand 'command' => command
   end
 
   def post(url, body)
-    @conn        ||= Faraday.new(url: url.origin)
-    body[:token] = Giffy::Configuration.slack.api_token
-    resp         = @conn.post do |request|
+    @conn ||= Faraday.new(url: url.origin) do |c|
+      c.request :url_encoded
+      c.response :detailed_logger if Rails.env.development?
+      c.adapter Faraday.default_adapter
+    end
+    resp  = @conn.post do |request|
       request.url url.request_uri
       request.body = body
     end
 
-    raise InvalidResponseError, "Invalid response from Slack: #{resp.status}" if resp.status/100 != 2
+    raise UnsuccessfulResponseError.new(url, body, resp) if resp.status/100 != 2
 
     parsed_body = JSON.parse(resp.body)
-    raise InvalidResponseError, "Invalid response from Slack: #{parsed_body['error']}" unless parsed_body['ok']
+    raise APIError.new(url, body, resp) unless parsed_body['ok']
 
     return parsed_body
   end
 
-  def webhook_post(url, body)
-    @wconn ||= Faraday.new(url: url.origin)
-    resp   = @wconn.post do |request|
+  def callback_post(url, body)
+    conn = Faraday.new(url: url.origin) do |c|
+      c.response :detailed_logger if Rails.env.development?
+      c.adapter Faraday.default_adapter
+    end
+    resp = conn.post do |request|
       request.url url.request_uri
-      request.body = body.to_json
+      request.headers['Content-Type'] = 'application/json'
+      request.body                    = body.to_json
     end
 
-    raise InvalidResponseError, "Invalid response from Slack: #{resp.status}" if resp.status/100 != 2
+    raise UnsuccessfulResponseError.new(url, body, resp) if resp.status/100 != 2
+
+    # sometimes the responses are JSON-encoded, sometimes they're not?!
+    begin
+      parsed_body = JSON.parse(resp.body)
+      raise APIError.new(url, body, resp) unless parsed_body['ok']
+      return parsed_body
+    rescue JSON::ParserError
+      raise CallbackError.new(url, body, resp) if resp.body != 'ok'
+      return resp.body
+    end
+
     return resp.body
   end
 
+  # @abstract
+  #
   # Raised when the Slack API returns an error.
 
-  class InvalidResponseError < StandardError
+  class Error < StandardError
+    # @return [Addressable::URI] url The request URL.
+    attr_reader :url
+    # @return [Hash] body The request body prior to encoding.
+    attr_reader :body
+    # @return [Faraday::Response] The HTTP response.
+    attr_reader :response
+
+    # @private
+    def initialize(msg, url, body, response)
+      super(msg)
+      @url      = url
+      @body     = body
+      @response = response
+    end
+  end
+
+  # Raised when the Slack API returns a response code other than 200 OK.
+
+  class UnsuccessfulResponseError < Error
+    # @private
+    def initialize(url, body, response)
+      super "Invalid response from Slack: #{response.status}", url, body, response
+    end
+  end
+
+  # Raised when the Slack API response includes an 'error' property.
+
+  class APIError < Error
+    # @return [String] The Slack error identifier.
+    attr_reader :error
+
+    # @private
+    def initialize(url, body, response)
+      @error = JSON.parse(response.body)['error']
+      super "Slack API error: #{@error}", url, body, response
+    end
+  end
+
+  # Raised when a Slack callback response is an error.
+
+  class CallbackError < Error
+    # @return [String] The Slack error identifier.
+    attr_reader :error
+
+    # @private
+    def initialize(url, body, response)
+      @error = response.body
+      super "Slack API error: #{@error}", url, body, response
+    end
   end
 
   # Object containing data about a slash-command invocation. See the Slack API
   # to learn about its fields: https://api.slack.com/slash-commands
 
-  class Command < Struct.new(:token, :team_id, :team_domain, :channel_id, :channel_name, :user_id, :user_name, :command, :text)
+  class Command < Struct.new(:token, :team_id, :team_domain, :channel_id, :channel_name, :user_id, :user_name, :command, :text, :response_url)
 
     # @overload initialize(token, team_id, team_domain, channel_id, channel_name, user_id, user_name, command, text)
     #  Creates a new command from the given parameters.
@@ -145,17 +144,34 @@ class Slack
       end
     end
 
-    # @return [Hash] Information about the user, using the {User} model.
-
-    def user_info!
-      User.load(user_id)
-    end
-
     # @return [true, false] Whether the given token matches the valid command
     #   token stored in `config/environments/common/slack.yml`.
 
     def valid?
-      token == Giffy::Configuration.slack.command_tokens[command.sub(/^\//, '')]
+      token == Giffy::Configuration.slack.verification_token
     end
+
+    # @return [Authorization] The OAuth authorization associated with this team.
+
+    def authorization
+      @authorization ||= Authorization.find_by_team_id!(team_id)
+    end
+
+    # Sends a message to Slack to be posted in response to this command. The
+    # format of the body is similar to the "chat.postMessage" API action, but
+    # with limitations. See "Delayed responses and multiple responses" under
+    # https://api.slack.com/slash-commands#responding_to_a_command for more.
+    #
+    # @param [Hash<String, Object>] body The message body.
+    # @raise [Slack::Error] If the response is not 200 OK or an error occurs.
+    # @example
+    #   command.reply text: "Hello, world!", in_channel: true
+
+    def reply(body)
+      url  = Addressable::URI.parse(response_url)
+      resp = Slack.instance.send(:callback_post, url, body)
+    end
+
+    delegate :api_command, to: :authorization
   end
 end

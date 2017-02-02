@@ -1,0 +1,14 @@
+- view_paths.paths.map(&:to_path).each do |path|
+  - if (file = Rails.root.join(path, full_controller_path, current_template + '.js')).exist?
+    script type="text/javascript" == File.read(file)
+
+  - if (file = Rails.root.join(path, full_controller_path, current_template + '.js.erb')).exist?
+    script type="text/javascript" == ERB.new(File.read(file)).result(binding)
+
+  - if (file = Rails.root.join(path, full_controller_path, current_template + '.js.coffee')).exist?
+    script type="text/javascript" == CoffeeScript.compile(File.read(file))
+
+  - if (file = Rails.root.join(path, full_controller_path, current_template + '.js.coffee.erb')).exist?
+    script type="text/javascript" == CoffeeScript.compile(ERB.new(File.read(file)).result(binding))
+
+= content_for :javascripts

@@ -1,12 +1,16 @@
 doctype html
-html lang="en"
+html.no-js lang=I18n.locale
   head
-    meta charset="utf-8"
-    meta name="description" content="Giffy"
-    meta name="author" content="Tim Morgan"
-    = csrf_meta_tags
-
-    title giffy
-
-  body class=controller_name.gsub('/', '-') id="#{controller_name.gsub('/', '-')}-#{action_name}"
-    = yield
+    meta charset="utf-8" /
+    meta content="ie=edge" http-equiv="x-ua-compatible" /
+    title Giffy
+    meta content="The better Slack GIFfer" name="description" /
+    meta content="width=device-width, initial-scale=1" name="viewport" /
+    link href="apple-touch-icon.png" rel="apple-touch-icon" /
+    /! Place favicon.ico in the root directory
+    = stylesheet_link_tag 'application'
+  /script src="js/vendor/modernizr-2.8.3.min.js"
+  body class=full_controller_name id="#{full_controller_name}-#{current_template}"
+    .container= yield
+    = javascript_include_tag 'application'
+    = render 'layouts/inline_js'

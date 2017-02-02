@@ -1,9 +1,12 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
-require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
+# Prevent database truncation if the environment is production
+abort("The Rails environment is running in production mode!") if Rails.env.production?
+require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'webmock/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -20,12 +23,9 @@ require 'rspec/rails'
 #
 # Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
-# Checks for pending migrations before tests are run.
+# Checks for pending migration and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
-
-# No outgoing HTTP requests
-FakeWeb.allow_net_connect = false
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -51,31 +51,53 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
+  # Filter lines from Rails gems in backtraces.
+  config.filter_rails_from_backtrace!
+  # arbitrary gems may also be filtered via:
+  # config.filter_gems_from_backtrace("gem name")
+
+  # Database Cleaner
+
   config.before(:suite) do
-    system 'rm', '-f', Rails.root.join('tmp', '*.mmd').to_s
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with :truncation
+  end
+
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning { example.run }
+  end
+
+  # TimeCop
+
+  DEFAULT_TIME = Time.local(1982, 10, 19, 12, 13) # no special significance
+  config.before(:each) { Timecop.freeze DEFAULT_TIME }
+
+  # WebMock
+
+  config.before(:suite) do
+    WebMock.disable_net_connect!
   end
 end
 
-def test_slash_command(command, action, overrides={})
+def test_slash_command(command, action, authorization: nil, overrides: {})
+  authorization ||= FactoryGirl.create(:authorization)
+
   post action, params: overrides.reverse_merge(
-      channel_id:   'G048VLWL7',
+      channel_id:   'G123ABCD4',
       channel_name: 'privategroup',
       command:      "/#{command}",
       team_domain:  'square',
-      team_id:      'T024FALR8',
+      team_id:      authorization.team_id,
       text:         '',
-      token:        Giffy::Configuration.slack.command_tokens[command],
-      user_id:      'U02AY8HK2',
-      user_name:    'tim'
+      token:        Giffy::Configuration.slack.verification_token,
+      user_id:      'U12AB3CD4',
+      user_name:    'tim',
+      response_url: 'https://test.host/response'
   )
+
+  return authorization
 end
 
 def fixture_file(*path)
   Rails.root.join('spec', 'fixtures', *path).read
-end
-
-def stub_user_info
-  FakeWeb.register_uri :post,
-                       'https://slack.com/api/users.info',
-                       body: fixture_file('slack', 'userinfo.json')
 end

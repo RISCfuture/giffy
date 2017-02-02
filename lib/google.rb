@@ -14,7 +14,7 @@ class Google
   #   limiting.
   # @return [Array<Hash>] A list of results from Google. See the Google image
   #   search API for more information.
-  # @raise [Google::InvalidResponseError] If the API request fails.
+  # @raise [Google::UnsuccessfulResponseError] If the API request fails.
 
   def image_search(query, ip=nil)
     url      = image_search_url(query)
@@ -24,7 +24,7 @@ class Google
       request.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11) AppleWebKit/601.1.56 (KHTML, like Gecko) Version/9.0 Safari/601.1.56'
     end
 
-    raise InvalidResponseError, "Invalid response from Google: #{response.status}" if response.status/100 != 2
+    raise UnsuccessfulResponseError.new(url, response) if response.status/100 != 2
 
     html = Nokogiri::HTML(response.body)
     html.css('div.rg_meta').map do |meta|
@@ -54,6 +54,17 @@ class Google
 
   # Raised when a Google API request fails.
 
-  class InvalidResponseError < StandardError
+  class UnsuccessfulResponseError < StandardError
+    # @return [Addressable::URI] The request URL.
+    attr_reader :url
+    # @return [Faraday::Response] The HTTP response.
+    attr_reader :response
+
+    # @private
+    def initialize(url, response)
+      super "Invalid response from Google: #{response.status}"
+      @url      = url
+      @response = response
+    end
   end
 end

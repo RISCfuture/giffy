@@ -1,10 +1,12 @@
 ---
-message_url: "https://slack.com/api/chat.postMessage"
-webhook_message_url: "https://hooks.slack.com/services/YOUR/SLACK/TOKEN"
-user_info_url: "https://slack.com/api/users.info"
-api_token: YOUR_API_TOKEN
-webhook_token: YOUR_WEBHOOK_TOKEN
-command_tokens:
-  giffy: YOUR_COMMAND_TOKEN
-  latex: YOUR_COMMAND_TOKEN
-  glare: YOUR_COMMAND_TOKEN
+oauth_url_template: "https://slack.com/oauth/authorize{?query*}"
+api_url_template: "https://slack.com/api/{command}"
+client_id: YOUR_CLIENT_ID
+client_secret: YOUR_CLIENT_SECRET
+verification_token: YOUR_VERIFICATION_TOKEN
+scopes:
+- incoming-webhook
+- commands
+- chat:write:user
+- chat:write:bot
+- users:read

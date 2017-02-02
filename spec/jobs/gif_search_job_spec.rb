@@ -1,4 +1,4 @@
 require 'rails_helper'
 
-RSpec.describe GifSearchJob, type: :job do
+RSpec.describe GIFSearchJob, type: :job do
 end

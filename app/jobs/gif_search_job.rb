@@ -1,32 +1,53 @@
 require 'google'
 require 'slack'
 
-# Asynchronous job for `/giffy`. See {GiffyController}.
+# Asynchronous job for `/giffy`.
+#
+# @see GiffyController#search
 
-class GifSearchJob < ApplicationJob
+class GIFSearchJob < SlackCommandJob
   queue_as :default
+
+  protected
 
   # Searches for a GIF using Google Image Search and posts it to the channel.
   #
-  # @param [Hash<Symbol, String>] command The originating Slack command,
-  #   obtained using {Slack::Command}#to_h. This object is used to determine the
-  #   channel to post to.
-  # @param [String] text The search query.
-  # @param [String] giffy_image The Giffy image to use as the avatar in Slack.
+  # @param [Slack::Command] command The originating Slack command. This object
+  #   is used to determine the channel to post to and GIF to search for.
 
-  def perform(command, text, giffy_image)
-    command = Slack::Command.new(command)
-    Slack.instance.echo command
-
-    images = Google.instance.image_search(text)
-
-    if images.empty?
-      Slack.instance.webhook_message command.channel_id, I18n.t('controllers.giffy.search.no_results').sample
+  def perform_command(command)
+    image = find_gif(command)
+    unless image
+      send_empty_reply(command)
       return
     end
 
-    num   = [1.0/rand, images.size - 1].min
-    image = images[num.to_i]
-    Slack.instance.webhook_message command.channel_id, image, icon_url: giffy_image
+    send_reply command, image
+  end
+
+  private
+
+  def find_gif(command)
+    images = Google.instance.image_search(command.text)
+    return nil if images.empty?
+
+    num = [1.0/rand, images.size - 1].min
+    return images[num.to_i]
+  end
+
+  def send_reply(command, image)
+    command.reply response_type: 'in_channel',
+                  text:          I18n.t('jobs.gif_search.text', user: command.user_name, query: command.text),
+                  attachments:   [{
+                                      image_url:       image,
+                                      attachment_type: 'default',
+                                      fallback:        I18n.t('jobs.gif_search.fallback'),
+                                      callback_id:     'TODO'
+                                  }]
+  end
+
+  def send_empty_reply(command)
+    command.reply text:          I18n.t('controllers.giffy.search.no_results').sample,
+                  response_type: 'in_channel'
   end
 end
