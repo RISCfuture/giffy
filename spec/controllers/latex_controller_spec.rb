@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe LaTeXController, type: :controller do
+  include ActiveJob::TestHelper
+
+  around(:each) { |ex| perform_enqueued_jobs { ex.run } }
   before :each do
     @authorization = FactoryGirl.create(:authorization)
   end

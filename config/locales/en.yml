@@ -63,5 +63,15 @@ en:
     gif_search:
       text: "*@%{user}* searched for _%{query}_ using /giffy"
       fallback: "One piping-hot GIF brought to you courtesy of /giffy!"
+      actions:
+        delete:
+          title: NopeNopeNope
+          confirm:
+            title: Delete this GIF?
+            text: I can delete this GIF if it’s inappropriate. Are you sure you want to do this?
+            ok: Delete It
+            dismiss: Keep It
     latex:
       text: "*@%{user}* rendered a LaTeX equation"
+    message_delete:
+      error: That GIF was nope’d. Sorry!

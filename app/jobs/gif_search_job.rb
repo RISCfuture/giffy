@@ -22,7 +22,8 @@ class GIFSearchJob < SlackCommandJob
       return
     end
 
-    send_reply command, image
+    result_record = GIFResult.create(command: command, image_url: image)
+    send_reply command, image, result_record
   end
 
   private
@@ -35,14 +36,27 @@ class GIFSearchJob < SlackCommandJob
     return images[num.to_i]
   end
 
-  def send_reply(command, image)
+  def send_reply(command, image, result_record)
     command.reply response_type: 'in_channel',
                   text:          I18n.t('jobs.gif_search.text', user: command.user_name, query: command.text),
                   attachments:   [{
                                       image_url:       image,
                                       attachment_type: 'default',
                                       fallback:        I18n.t('jobs.gif_search.fallback'),
-                                      callback_id:     'TODO'
+                                      callback_id:     result_record.id&.to_s || 'nil',
+                                      actions:         [{
+                                                            name:    'audit_gif',
+                                                            text:    I18n.t('jobs.gif_search.actions.delete.title'),
+                                                            type:    'button',
+                                                            value:   'delete',
+                                                            style:   'danger',
+                                                            confirm: {
+                                                                title:        I18n.t('jobs.gif_search.actions.delete.confirm.title'),
+                                                                text:         I18n.t('jobs.gif_search.actions.delete.confirm.text'),
+                                                                ok_text:      I18n.t('jobs.gif_search.actions.delete.confirm.ok'),
+                                                                dismiss_text: I18n.t('jobs.gif_search.actions.delete.confirm.dismiss')
+                                                            }
+                                                        }]
                                   }]
   end
 

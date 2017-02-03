@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AuthorizationRequestsController, type: :controller do
+  include ActiveJob::TestHelper
+
+  around(:each) { |ex| perform_enqueued_jobs { ex.run } }
+
   describe '#new' do
     it "should render the 'new' template" do
       get :new

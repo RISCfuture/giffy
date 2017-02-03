@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe GiffyController, type: :controller do
+  include ActiveJob::TestHelper
+
+  around(:each) { |ex| perform_enqueued_jobs { ex.run } }
   before :each do
     @authorization = FactoryGirl.create(:authorization)
   end
@@ -16,13 +19,27 @@ RSpec.describe GiffyController, type: :controller do
 
       expect(response.status).to eql(200)
       expect(response.body).to be_empty
-      expect(stub_response).to have_been_requested
+      expect(stub_response).to have_been_requested.twice # once for the button delete
+      # original request
       expect(WebMock::RequestRegistry.instance.requested_signatures.hash.detect do |sig, _|
         sig.uri.to_s == 'https://test.host:443/response' &&
             (json = JSON.parse(sig.body))['response_type'] == 'in_channel' &&
             json['text'] != nil &&
             json['attachments'].first['image_url'] != nil &&
-            json['attachments'].first['attachment_type'] == 'default'
+            json['attachments'].first['attachment_type'] == 'default' &&
+            json['attachments'].first['actions']&.first&.fetch('name') == 'audit_gif' &&
+            json['attachments'].first['actions']&.first&.fetch('type') == 'button' &&
+            json['attachments'].first['actions']&.first&.fetch('value') == 'delete' &&
+            json['attachments'].first['actions']&.first&.fetch('style') == 'danger'
+      end).not_to be_nil
+      # follow-up request w/o buttons
+      expect(WebMock::RequestRegistry.instance.requested_signatures.hash.detect do |sig, _|
+        sig.uri.to_s == 'https://test.host:443/response' &&
+            (json = JSON.parse(sig.body))['response_type'] == 'in_channel' &&
+            json['text'] != nil &&
+            json['attachments'].first['image_url'] != nil &&
+            json['attachments'].first['attachment_type'] == 'default' &&
+            json['attachments'].first['actions'].empty?
       end).not_to be_nil
     end
 

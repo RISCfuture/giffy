@@ -10,6 +10,7 @@ require 'slack'
 # |                         |                                                                 |
 # |:------------------------|:----------------------------------------------------------------|
 # | `authorization_request` | The {AuthorizationRequest} that resulted in this authorization. |
+# | `gif_results`           | The {GIFResult GIFResults} created for this team.               |
 #
 # Properties
 # ----------
@@ -25,6 +26,8 @@ require 'slack'
 
 class Authorization < ApplicationRecord
   has_one :authorization_request, dependent: :destroy, inverse_of: :authorization
+  has_many :gif_results, dependent: :delete_all, inverse_of: :authorization
+
   validates :access_token, :scope,
             presence: true,
             length:   {maximum: 128}
