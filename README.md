@@ -7,6 +7,8 @@ Web-based Slack application powering the following Slack commands:
   Google Image Search. Dispatched to {GiffyController#search}.
 * **/latex _[code]_**: Renders _[code]_ as a LaTeX image. Dispatched to
   {LaTeXController#display}.
+* **/comicsans _[text]_**: Renders _[text]_ in Comic Sans. Dispatched to
+  {ComicSansController#display}.
 
 Getting Started
 ---------------
@@ -19,9 +21,10 @@ is provided after [creating an app](https://api.slack.com/apps?new_app=1). This
 information should be placed in `config/environments/*/slack.yml`, along with
 the verification token.
 
-To use `/latex` you will need LaTeX installed (with `pdflatex`), ImageMagick,
-and an AWS S3 account. For development you will need credentials in a file at
-`~/.aws/credentials` that looks like this:
+To use `/latex` you will need LaTeX installed (with `pdflatex`), and to use
+`/latex` or `/comicsans` you will need ImageMagick and an AWS S3 account. For
+development you will need credentials in a file at `~/.aws/credentials` that
+looks like this:
 
 ````
 [default]
@@ -108,6 +111,11 @@ Uses the {Google} helper class to perform a Google image search. See
 Uses the `pdflatex` binary to render a LaTeX math snippet to a PDF file, and
 then ImageMagick to convert it to an image, and then AWS S3 to upload the image.
 See {LaTeXController}.
+
+### /comicsans
+
+Uses Prawn and ImageMagick to render a string in Comic Sans to an image, and
+then AWS S3 to upload the image. See {ComicSansController}.
 
 API Integration
 ---------------

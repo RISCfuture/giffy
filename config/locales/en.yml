@@ -55,6 +55,8 @@ en:
         giffy_description: Searches for GIFs matching <code>[query]</code>
         latex: /latex [equation]
         latex_description: Renders the L<sup>A</sup>T<sub>E</sub>X equation <code>[equation]</code> as an image
+        comic_sans: /comicsans [text]
+        comic_sans_description: Displays <code>[text]</code> in Comic Sans.
       create:
         error_message:
           access_denied: You denied Giffy access to your Slack team.
@@ -75,3 +77,5 @@ en:
       text: "*@%{user}* rendered a LaTeX equation"
     message_delete:
       error: That GIF was nope’d. Sorry!
+    comicsans:
+      text: "*@%{user}* used /comicsans"

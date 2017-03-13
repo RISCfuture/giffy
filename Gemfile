@@ -41,6 +41,9 @@ gem 'nokogiri'
 # LATEX
 gem 'aws-sdk'
 
+# COMIC SANS
+gem 'prawn'
+
 group :development do
   gem 'puma'
 
