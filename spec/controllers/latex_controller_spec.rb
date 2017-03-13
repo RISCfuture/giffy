@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'latex'
 
 RSpec.describe LaTeXController, type: :controller do
   include ActiveJob::TestHelper

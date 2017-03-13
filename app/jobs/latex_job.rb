@@ -10,7 +10,7 @@ class LaTeXJob < SlackCommandJob
 
   protected
 
-  # Uses latex to generate an image of an equation, then uploads it to S3 and
+  # Uses LaTeX to generate an image of an equation, then uploads it to S3 and
   # posts the URL to the Slack channel.
   #
   # @param [Slack::Command] command The original Slack command. This object is

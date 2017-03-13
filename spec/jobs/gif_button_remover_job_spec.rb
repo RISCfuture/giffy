@@ -21,15 +21,16 @@ RSpec.describe GIFButtonRemoverJob, type: :job do
 
     it "should send update the message" do
       stub_request(:post, 'https://test.host/respond').
-          with(body: {response_type: 'in_channel',
-                      text:          "*@sancho* searched for _test test_ using /giffy",
-                      attachments:   [{
-                                          image_url:       image,
-                                          attachment_type: 'default',
-                                          fallback:        "One piping-hot GIF brought to you courtesy of /giffy!",
-                                          callback_id:     gif_result.id,
-                                          actions:         []
-                                      }]}.to_json).
+          with(body: {response_type:    'in_channel',
+                      replace_original: true,
+                      text:             "*@sancho* searched for _test test_ using /giffy",
+                      attachments:      [{
+                                             image_url:       image,
+                                             attachment_type: 'default',
+                                             fallback:        "One piping-hot GIF brought to you courtesy of /giffy!",
+                                             callback_id:     gif_result.id,
+                                             actions:         []
+                                         }]}.to_json).
           to_return(body: {'ok' => true}.to_json)
 
       GIFButtonRemoverJob.perform_now gif_result

@@ -59,7 +59,7 @@ RSpec.describe MessageDeleteJob, type: :job do
                       'ts'      => '1486091344.000343'}).
           to_return(body: {'error' => 'unknown_channel'}.to_json)
       stub_request(:post, 'https://test.host/respond').
-          with(body: "{\"text\":\"That GIF was nope’d. Sorry!\",\"attachments\":[]}").
+          with(body: "{\"text\":\"That GIF was nope’d. Sorry!\",\"replace_original\":true,\"attachments\":[]}").
           to_return(body: 'ok')
 
       MessageDeleteJob.perform_now payload

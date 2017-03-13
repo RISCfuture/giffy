@@ -105,7 +105,7 @@ Uses the {Google} helper class to perform a Google image search. See
 
 ### /latex
 
-Uses The `pdflatex` binary to render a LaTeX math snippet to a PDF file, and
+Uses the `pdflatex` binary to render a LaTeX math snippet to a PDF file, and
 then ImageMagick to convert it to an image, and then AWS S3 to upload the image.
 See {LaTeXController}.
 
