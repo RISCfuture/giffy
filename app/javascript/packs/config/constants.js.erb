@@ -1,0 +1,8 @@
+/* rails-erb-loader-dependencies helpers/application_helper */
+<% helpers = ActionController::Base.helpers %>
+<% include ActionView::Helpers::JavaScriptHelper %>
+
+export default {
+  oauthURL: "<%= j ApplicationHelper.oauth_url.to_s %>",
+  loadingImageURL: "<%= j helpers.image_url('loading.svg') %>"
+}

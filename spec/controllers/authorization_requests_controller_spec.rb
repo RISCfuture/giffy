@@ -21,10 +21,8 @@ RSpec.describe AuthorizationRequestsController, type: :controller do
         get :create, params: {error: error}
       end
 
-      it "should render the 'create_error' template" do
-        expect(response.status).to eql(200)
-        expect(response).to render_template('create_error')
-        expect(assigns(:error)).to eql(error)
+      it "should redirect with error" do
+        expect(response).to redirect_to(root_url(error: error))
       end
     end
 
@@ -57,7 +55,7 @@ RSpec.describe AuthorizationRequestsController, type: :controller do
         get :create, params: {code: code}
       end
 
-      it "should create an authorization request and render the 'create' template" do
+      it "should create an authorization request and redirect" do
         expect(AuthorizationRequest.count).to eql(1)
         authorization_request = AuthorizationRequest.first
 
@@ -73,9 +71,7 @@ RSpec.describe AuthorizationRequestsController, type: :controller do
         expect(authorization_request.authorization.incoming_webhook_channel).to eql(template_authorization.incoming_webhook_channel)
         expect(authorization_request.authorization.incoming_webhook_config_url).to eql(template_authorization.incoming_webhook_config_url)
 
-        expect(response.status).to eql(200)
-        expect(assigns(:authorization_request)).to eql(authorization_request)
-        expect(response).to render_template('create')
+        expect(response).to redirect_to(root_url(authorization_request_id: authorization_request.id))
       end
 
       context '[authorization error]' do
@@ -100,10 +96,7 @@ RSpec.describe AuthorizationRequestsController, type: :controller do
         let(:code) { ' ' }
 
         it "should handle a validation error" do
-          expect(assigns(:authorization_request)).to be_kind_of(AuthorizationRequest)
-          expect(assigns(:authorization_request)).not_to be_valid
-          expect(response.status).to eql(200)
-          expect(response).to render_template('create')
+          expect(response).to redirect_to(root_url(error: 'invalid_authorization_request'))
         end
       end
     end

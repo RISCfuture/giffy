@@ -1,22 +1,46 @@
 {
-  "auth_status": {
-    "message": {
-      "pending":   "Authorizing with Slack…",
-      "success":   "Giffy is now available on {{team}}.",
-      "error":     {
-        "invalid_client_id": "Value passed for client_id was invalid.",
-        "bad_client_secret": "Value passed for client_secret was invalid.",
-        "invalid_code":      "Value passed for code was invalid.",
-        "bad_redirect_uri":  "Value passed for redirect_uri did not match the redirect_uri in the original request.",
-        "invalid_arg_name":  "The method was passed an argument whose name falls outside the bounds of common decency. This includes very long names and names with non-alphanumeric characters other than _. If you get this error, it is typically an indication that you have made a very malformed API call.",
-        "invalid_array_arg": "The method was passed a PHP-style array argument (e.g. with a name like foo[7]). These are never valid with the Slack API.",
-        "invalid_charset":   "The method was called via a POST request, but the charset specified in the Content-Type header was invalid. Valid charset names are: utf-8 iso-8859-1.",
-        "invalid_form_data": "The method was called via a POST request with Content-Type application/x-www-form-urlencoded or multipart/form-data, but the form data was either missing or syntactically invalid.",
-        "invalid_post_type": "The method was called via a POST request, but the specified Content-Type was invalid. Valid types are: application/json application/x-www-form-urlencoded multipart/form-data text/plain.",
-        "missing_post_type": "The method was called via a POST request and included a data payload, but the request did not include a Content-Type header.",
-        "request_timeout":   "The method was called via a POST request, but the POST data was either missing or truncated."
+  "views": {
+    "authorize": {
+      "add_to_slack": "Add to Slack",
+      "jumbotron": {
+        "giffy": "Giffy",
+        "giffy_description": "A Slack application with a better GIF search, and more!"
       },
-      "xhr_error": "Couldn’t send request to Slack."
+      "error_message": {
+        "access_denied": "You denied Giffy access to your Slack team.",
+        "default": "An error occurred: {{error}}"
+      },
+      "auth_status": {
+        "message": {
+          "pending":   "Authorizing with Slack…",
+          "success":   "Giffy is now available on {{team}}.",
+          "error":     {
+            "invalid_client_id": "Value passed for client_id was invalid.",
+            "bad_client_secret": "Value passed for client_secret was invalid.",
+            "invalid_code":      "Value passed for code was invalid.",
+            "bad_redirect_uri":  "Value passed for redirect_uri did not match the redirect_uri in the original request.",
+            "invalid_arg_name":  "The method was passed an argument whose name falls outside the bounds of common decency. This includes very long names and names with non-alphanumeric characters other than _. If you get this error, it is typically an indication that you have made a very malformed API call.",
+            "invalid_array_arg": "The method was passed a PHP-style array argument (e.g. with a name like foo[7]). These are never valid with the Slack API.",
+            "invalid_charset":   "The method was called via a POST request, but the charset specified in the Content-Type header was invalid. Valid charset names are: utf-8 iso-8859-1.",
+            "invalid_form_data": "The method was called via a POST request with Content-Type application/x-www-form-urlencoded or multipart/form-data, but the form data was either missing or syntactically invalid.",
+            "invalid_post_type": "The method was called via a POST request, but the specified Content-Type was invalid. Valid types are: application/json application/x-www-form-urlencoded multipart/form-data text/plain.",
+            "missing_post_type": "The method was called via a POST request and included a data payload, but the request did not include a Content-Type header.",
+            "request_timeout":   "The method was called via a POST request, but the POST data was either missing or truncated."
+          },
+          "xhr_error": "Couldn’t send request to Slack."
+        }
+      }
+    }
+  },
+  "components": {
+    "help": {
+      "commands": "Commands",
+      "giffy": "/giffy [query]",
+      "giffy_description": "Searches for GIFs matching <code>[query]</code>",
+      "latex": "/latex [equation]",
+      "latex_description": "Renders the L<sup>A</sup>T<sub>E</sub>X equation <code>[equation]</code> as an image",
+      "comic_sans": "/comicsans [text]",
+      "comic_sans_description": "Displays <code>[text]</code> in Comic Sans."
     }
   }
 }

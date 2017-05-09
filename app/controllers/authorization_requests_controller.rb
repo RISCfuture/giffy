@@ -29,6 +29,9 @@ class AuthorizationRequestsController < ApplicationController
   # * `GET /`
 
   def new
+    @error                 = params[:error].presence
+    @authorization_request = AuthorizationRequest.find(params[:authorization_request_id]) if params[:authorization_request_id].present?
+
     respond_to do |format|
       format.html # new.html.slim
     end
@@ -59,15 +62,14 @@ class AuthorizationRequestsController < ApplicationController
 
   def create
     if params[:error].present?
-      @error = params[:error]
-      return respond_to do |format|
-        format.html { render 'create_error' }
-      end
+      return redirect_to(root_url(error: params[:error]))
     end
 
     @authorization_request = AuthorizationRequest.create(code: params[:code])
-    respond_to do |format|
-      format.html # create.html.slim
+    if @authorization_request.valid?
+      redirect_to root_url(authorization_request_id: @authorization_request)
+    else
+      redirect_to root_url(error: 'invalid_authorization_request')
     end
   end
 

@@ -1,7 +1,12 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
 # FRAMEWORK
-gem 'rails', '5.0.1'
+gem 'rails', '5.1.1'
 gem 'configoro'
 
 # MODELS
@@ -17,20 +22,17 @@ gem 'slim-rails'
 gem 'sass-rails'
 gem 'autoprefixer-rails'
 # JS
-gem 'coffee-rails'
+gem 'webpacker'
 gem 'uglifier'
 gem 'therubyracer', platforms: :ruby
 gem 'sprockets-es6', require: 'sprockets/es6'
 gem 'turbolinks'
-source 'https://rails-assets.org' do
-  gem 'rails-assets-axios'
-  gem 'rails-assets-bootstrap'
-  gem 'rails-assets-i18next'
-  gem 'rails-assets-vue-i18next'
-  gem 'rails-assets-i18next-xhr-backend'
-end
+gem 'sprockets-es6', require: 'sprockets/es6'
 # JSON
 gem 'jbuilder'
+
+# JOBS
+gem 'sidekiq'
 
 # API
 gem 'addressable'
@@ -46,14 +48,11 @@ gem 'prawn'
 
 group :development do
   gem 'puma'
+  gem 'listen'
 
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'faraday-detailed_logger', require: 'faraday/detailed_logger'
-
-  gem 'spring'
-  gem 'listen'
-  gem 'spring-watcher-listen'
 end
 
 group :doc do
@@ -75,4 +74,10 @@ group :test do
   # FACTORIES
   gem 'factory_girl_rails'
   gem 'ffaker'
+end
+
+group :production do
+  # CACHING
+  gem 'redis-rails'
+  gem 'rack-cache', require: 'rack/cache'
 end

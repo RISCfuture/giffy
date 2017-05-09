@@ -1,3 +1,5 @@
 .bundle
 .yardoc
 tmp/*
+/public/packs
+/node_modules

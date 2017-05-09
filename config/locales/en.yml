@@ -42,25 +42,6 @@ en:
     application:
       validate_command:
         invalid: Invalid Slack command token.
-  views:
-    authorization_requests:
-      new:
-        add_to_slack: Add to Slack
-      shared:
-        giffy: Giffy
-        giffy_description: A Slack application with a better GIF search, and more!
-      help:
-        commands: Commands
-        giffy: /giffy [query]
-        giffy_description: Searches for GIFs matching <code>[query]</code>
-        latex: /latex [equation]
-        latex_description: Renders the L<sup>A</sup>T<sub>E</sub>X equation <code>[equation]</code> as an image
-        comic_sans: /comicsans [text]
-        comic_sans_description: Displays <code>[text]</code> in Comic Sans.
-      create:
-        error_message:
-          access_denied: You denied Giffy access to your Slack team.
-          default: "An error occurred: %{error}"
   jobs:
     gif_search:
       text: "*@%{user}* searched for _%{query}_ using /giffy"

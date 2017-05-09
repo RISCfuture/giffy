@@ -1,7 +1,0 @@
-= render 'hero' do
-  #auth-status data-request=request_json(@authorization_request)
-    = image_tag 'loading.svg', 'v-if' => 'loading', width: 33, height: 33, class: 'spinner'
-    p[v-bind:class="messageClass"]
-      | {{message}}
-
-= render 'help'

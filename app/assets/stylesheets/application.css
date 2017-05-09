@@ -1,5 +1,11 @@
 /*
- *= require bootstrap
- *
- *= require authorization_requests
+ *= require sticky_footer
  */
+
+.container {
+    max-width: 640px;
+}
+
+.page.container {
+    margin-top: 50px;
+}

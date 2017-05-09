@@ -3,14 +3,25 @@ html.no-js lang=I18n.locale
   head
     meta charset="utf-8" /
     meta content="ie=edge" http-equiv="x-ua-compatible" /
+
     title Giffy
     meta content="The better Slack GIFfer" name="description" /
+
     meta content="width=device-width, initial-scale=1" name="viewport" /
-    link href="apple-touch-icon.png" rel="apple-touch-icon" /
-    /! Place favicon.ico in the root directory
+
+    = favicon_link_tag
+
+    / Bootstrap
+    link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" rel="stylesheet" /
+    script crossorigin="anonymous" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+    script crossorigin="anonymous" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+    script crossorigin="anonymous" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+
     = stylesheet_link_tag 'application'
-  /script src="js/vendor/modernizr-2.8.3.min.js"
+
   body class=full_controller_name id="#{full_controller_name}-#{current_template}"
-    .container= yield
-    = javascript_include_tag 'application'
+    .page.container= yield
+    = render 'layouts/footer'
     = render 'layouts/inline_js'
+
+    = javascript_pack_tag 'application'
