@@ -14,8 +14,8 @@
         </a>
       </div>
 
-      <div v-if="request" id="auth-status">
-        <img :src="loadingImageURL" v-if="loading" width="33" height="33" classs="spinner" />
+      <div v-else id="auth-status">
+        <img v-if="request && loading" :src="loadingImageURL" width="33" height="33" classs="spinner" />
         <p :class="messageClass" v-if="message">{{ message }}</p>
       </div>
 
@@ -37,23 +37,30 @@
 
         oauthURL: constants.oauthURL,
         loadingImageURL: constants.loadingImageURL,
-
-        authorizationRequestID: this.$route.query.authorization_request_id,
-        error: this.$route.query.error
       }
     },
 
     components: {Help},
 
     computed: {
+      authorizationRequestID() {
+        let matches = window.location.search.match(/authorization_request_id=(\d+)/)
+        return matches ? matches[1] : null
+      },
+
+      error() {
+        let matches = window.location.search.match(/error=(\w+)/)
+        return matches ? matches[1] : null
+      },
+
       addToSlackAlt() { this.$t('views.authorize.add_to_slack') },
 
       loading() { return this.request === null || (this.request.status !== 'success' && this.request.status !== 'error')},
 
       message() {
         if (this.error !== null)
-          return this.$t(`views.authorize.error_message.${error}`,
-           {defaultValue: this.$t('views.authorize.error_message.default')});
+          return this.$t(`views.authorize.error_message.${this.error}`,
+           {defaultValue: this.$t('views.authorize.error_message.default', {error: this.error})});
 
         if (this.request === null)
           return this.$t('views.authorize.auth_status.message.pending');
