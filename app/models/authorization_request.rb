@@ -30,7 +30,7 @@ class AuthorizationRequest < ApplicationRecord
 
   validates :code,
             presence: true,
-            length: {maximum: 64}
+            length: {maximum: 128}
 
   after_create :spawn_job
 

@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170203211414) do
+ActiveRecord::Schema.define(version: 20170815011501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "authorization_requests", id: :serial, force: :cascade do |t|
     t.integer "authorization_id"
-    t.string "code", limit: 64, null: false
+    t.string "code", limit: 128, null: false
     t.integer "status", limit: 2, default: 0, null: false
     t.text "error"
     t.datetime "created_at", null: false
