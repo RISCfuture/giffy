@@ -6,6 +6,11 @@ class GiffyController < SlackCommandController
   # Spawns a {GIFSearchJob}.
 
   def search
+    # if command.channel_id.start_with?('G')
+    #   render plain: t('controllers.giffy.search.private_channel')
+    #   return
+    # end
+
     GIFSearchJob.perform_later command.to_h
     head :ok
   end

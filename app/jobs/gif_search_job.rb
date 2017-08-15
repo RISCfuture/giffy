@@ -16,9 +16,16 @@ class GIFSearchJob < SlackCommandJob
   #   is used to determine the channel to post to and GIF to search for.
 
   def perform_command(command)
+    unless check_command(command)
+      command.reply text:          I18n.t('controllers.giffy.search.private_channel'),
+                    response_type: 'ephemeral'
+      return
+    end
+
     image = find_gif(command)
     unless image
-      send_empty_reply(command)
+      command.reply text:          I18n.t('controllers.giffy.search.no_results').sample,
+                    response_type: 'in_channel'
       return
     end
 
@@ -60,8 +67,12 @@ class GIFSearchJob < SlackCommandJob
                                   }]
   end
 
-  def send_empty_reply(command)
-    command.reply text:          I18n.t('controllers.giffy.search.no_results').sample,
-                  response_type: 'in_channel'
+  def check_command(command)
+    if command.channel_id.start_with?('G')
+      info = command.authorization.api_command('groups.list', exclude_members: true)
+      return info['groups'].any? { |g| g['id'] == command.channel_id }
+    else
+      return true
+    end
   end
 end

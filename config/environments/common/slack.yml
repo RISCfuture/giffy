@@ -10,3 +10,4 @@ scopes:
 - chat:write:user
 - chat:write:bot
 - users:read
+- groups:read

@@ -39,6 +39,7 @@ en:
         - Got nothing for ya, sorry.
         - Comin’ up blank.
         - No results ¯\_(ツ)_/¯
+        private_channel: "Sorry, but Giffy is disabled in private channels due to a bug in the Slack API :("
     application:
       validate_command:
         invalid: Invalid Slack command token.

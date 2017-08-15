@@ -83,8 +83,8 @@ def test_slash_command(command, action, authorization: nil, overrides: {})
   authorization ||= FactoryGirl.create(:authorization)
 
   post action, params: overrides.reverse_merge(
-      channel_id:   'G123ABCD4',
-      channel_name: 'privategroup',
+      channel_id:   'C123ABCD4',
+      channel_name: 'mygroup',
       command:      "/#{command}",
       team_domain:  'square',
       team_id:      authorization.team_id,
