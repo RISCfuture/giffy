@@ -1,0 +1,8 @@
+@import "./sticky_footer.css";
+
+#app {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}

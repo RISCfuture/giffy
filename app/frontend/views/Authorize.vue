@@ -26,8 +26,9 @@
 
 <script>
   import axios from 'axios'
-  import constants from '../config/constants.js.erb'
-  import Help from '../components/Help.vue'
+  import constants from 'config/constants.js.erb'
+  import Help from 'components/Help.vue'
+  import loadingImageURL from 'images/loading.svg'
 
   export default {
     data() {
@@ -36,7 +37,7 @@
         refreshInterval: null,
 
         oauthURL: constants.oauthURL,
-        loadingImageURL: constants.loadingImageURL,
+        loadingImageURL
       }
     },
 

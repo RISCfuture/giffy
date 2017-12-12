@@ -17,10 +17,10 @@ html.no-js lang=I18n.locale
     script crossorigin="anonymous" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
     script crossorigin="anonymous" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
 
-    = stylesheet_link_tag 'application'
+    = stylesheet_pack_tag 'application'
 
-  body class=full_controller_name id="#{full_controller_name}-#{current_template}"
-    .page.container= yield
+  body
+    = yield
     = render 'layouts/footer'
     = render 'layouts/inline_js'
 

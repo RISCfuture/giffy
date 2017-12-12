@@ -12,21 +12,17 @@ import Vue from 'vue'
 import i18next from 'i18next'
 import i18nextXHRBackend from 'i18next-xhr-backend'
 import VueI18Next from '@panter/vue-i18next'
-Vue.use(VueI18Next);
-i18next.use(i18nextXHRBackend).init({lng: document.getElementsByTagName('HTML')[0].getAttribute('lang')});
-const i18n = new VueI18Next(i18next);
+Vue.use(VueI18Next)
+i18next.use(i18nextXHRBackend).init({lng: document.getElementsByTagName('HTML')[0].getAttribute('lang')})
+const i18n = new VueI18Next(i18next)
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter);
-import routes from './config/routes'
+import routes from 'config/routes'
+const router = new VueRouter({routes, mode: 'history'})
 
-import Authorize from './views/Authorize.vue'
+import 'stylesheets/application.css'
 
 document.addEventListener('DOMContentLoaded', () => {
-  new Vue({
-            i18n,
-            el: '.container',
-            components: {Authorize},
-            router: new VueRouter({routes}),
-          });
-});
+  new Vue({i18n, router}).$mount('#app')
+})
