@@ -80,7 +80,7 @@ RSpec.configure do |config|
 end
 
 def test_slash_command(command, action, authorization: nil, overrides: {})
-  authorization ||= FactoryGirl.create(:authorization)
+  authorization ||= FactoryBot.create(:authorization)
 
   post action, params: overrides.reverse_merge(
       channel_id:   'C123ABCD4',

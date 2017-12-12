@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # FRAMEWORK
-gem 'rails', '5.1.3'
+gem 'rails', '5.1.4'
 gem 'configoro'
 
 # MODELS
@@ -25,9 +25,7 @@ gem 'autoprefixer-rails'
 gem 'webpacker'
 gem 'uglifier'
 gem 'therubyracer', platforms: :ruby
-gem 'sprockets-es6', require: 'sprockets/es6'
 gem 'turbolinks'
-gem 'sprockets-es6', require: 'sprockets/es6'
 # JSON
 gem 'jbuilder'
 
@@ -41,7 +39,7 @@ gem 'json'
 gem 'nokogiri'
 
 # LATEX
-gem 'aws-sdk'
+gem 'aws-sdk-s3'
 
 # COMIC SANS
 gem 'prawn'
@@ -72,7 +70,7 @@ group :test do
   gem 'fakefs', require: 'fakefs/safe'
 
   # FACTORIES
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'ffaker'
 end
 

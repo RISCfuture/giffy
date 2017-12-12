@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Authorization, type: :model do
   describe '#revoke!' do
-    let(:authorization) { FactoryGirl.create :authorization }
+    let(:authorization) { FactoryBot.create :authorization }
 
     it "should send an API request and delete the record" do
       stub_request(:post, 'https://slack.com/api/auth.revoke').

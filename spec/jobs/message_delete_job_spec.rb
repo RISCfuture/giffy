@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MessageDeleteJob, type: :job do
   describe '#perform' do
-    let(:authorization) { FactoryGirl.create :authorization }
+    let(:authorization) { FactoryBot.create :authorization }
     let(:payload) {
       {'actions'          => [{'name'  => 'audit_gif',
                                'value' => 'delete'}],

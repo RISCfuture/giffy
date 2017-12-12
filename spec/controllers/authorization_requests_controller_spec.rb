@@ -28,7 +28,7 @@ RSpec.describe AuthorizationRequestsController, type: :controller do
 
     context "[given a code]" do
       let(:code) { rand(1_000_000).to_s.rjust(7, '0') }
-      let(:template_authorization) { FactoryGirl.build(:authorization) }
+      let(:template_authorization) { FactoryBot.build(:authorization) }
       let(:response_body) do
         {
             'ok'               => true,
@@ -106,7 +106,7 @@ RSpec.describe AuthorizationRequestsController, type: :controller do
     let(:authorization_request) do
       stub_request(:post, 'https://slack.com/api/oauth.access').
           to_return(status: 404)
-      FactoryGirl.create :authorization_request
+      FactoryBot.create :authorization_request
     end
 
     it "should render the JSON template" do

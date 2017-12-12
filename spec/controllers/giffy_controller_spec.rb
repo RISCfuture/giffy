@@ -5,7 +5,7 @@ RSpec.describe GiffyController, type: :controller do
 
   around(:each) { |ex| perform_enqueued_jobs { ex.run } }
   before :each do
-    @authorization = FactoryGirl.create(:authorization)
+    @authorization = FactoryBot.create(:authorization)
 
     stub_request(:post, 'https://slack.com/api/groups.list').
         to_return(body: {ok:     true,

@@ -6,7 +6,7 @@ RSpec.describe ComicSansController, type: :controller do
 
   around(:each) { |ex| perform_enqueued_jobs { ex.run } }
   before :each do
-    @authorization = FactoryGirl.create(:authorization)
+    @authorization = FactoryBot.create(:authorization)
   end
 
   describe '/comicsans' do

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :authorization do
     ALPHANUM = ('0'..'9').to_a + ('A'..'Z').to_a
     ALPHANUM_AC = ALPHANUM + ('a'..'z').to_a

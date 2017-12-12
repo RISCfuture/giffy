@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe GIFButtonRemoverJob, type: :job do
   describe '#perform' do
-    let(:authorization) { FactoryGirl.create :authorization }
+    let(:authorization) { FactoryBot.create :authorization }
     let(:command) do
       Slack::Command.new authorization.access_token,
                          authorization.team_id,

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   ALPHANUM = ('A'..'Z').to_a + ('0'..'9').to_a
 
   factory :gif_result do

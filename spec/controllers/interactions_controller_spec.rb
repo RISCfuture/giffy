@@ -6,7 +6,7 @@ RSpec.describe InteractionsController, type: :controller do
   around(:each) { |ex| perform_enqueued_jobs { ex.run } }
 
   describe '#handle' do
-    let(:authorization) { FactoryGirl.create(:authorization) }
+    let(:authorization) { FactoryBot.create(:authorization) }
     let(:action_name) { 'other' }
     let(:action_value) { 'other' }
     let(:verification_token) { Giffy::Configuration.slack.verification_token }

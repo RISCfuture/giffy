@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :authorization_request do
     code do
       [rand(100_000_000_000).to_s.rjust(11, '0'),
