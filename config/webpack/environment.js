@@ -1,13 +1,7 @@
 const { environment } = require('@rails/webpacker')
+const erb =  require('./loaders/erb')
+const vue =  require('./loaders/vue')
 
-//TEMP fix for webpacker erb bug
-environment.config.merge({
-  module: {
-    rules: [
-      environment.loaders.get('erb')
-    ]
-  }
-})
-environment.loaders.delete('erb')
-
+environment.loaders.append('vue', vue)
+environment.loaders.append('erb', erb)
 module.exports = environment

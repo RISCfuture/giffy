@@ -28,11 +28,9 @@ class Google
 
     html = Nokogiri::HTML(response.body)
     html.css('div.rg_meta').map do |meta|
-      begin
-        JSON.parse(meta.content)['ou']
-      rescue
-        nil
-      end
+      JSON.parse(meta.content)['ou']
+    rescue
+      nil
     end.compact
   end
 

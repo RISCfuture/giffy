@@ -10,7 +10,7 @@ gem 'rails', '5.1.4'
 gem 'configoro'
 
 # MODELS
-gem 'pg'
+gem 'pg', '< 1.0'
 gem 'find_or_create_on_scopes'
 gem 'url_validation'
 

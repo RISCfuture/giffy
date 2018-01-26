@@ -1,5 +1,4 @@
 plugins:
   precss: {}
-  postcss-smart-import: {}
+  postcss-import: {}
   postcss-cssnext: {}
-  postcss-property-lookup: {}
