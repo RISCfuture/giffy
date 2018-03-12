@@ -1,4 +1,3 @@
 plugins:
-  precss: {}
   postcss-import: {}
   postcss-cssnext: {}
