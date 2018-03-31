@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@panter/vue-i18next": "^0.9.1",
-    "@rails/webpacker": "^3.3.1",
+    "@rails/webpacker": "^3.4.1",
     "axios": "^0.18.0",
     "i18next": "^10.6.0",
     "i18next-xhr-backend": "^1.5.1",
@@ -9,7 +9,7 @@
     "precss": "^3.1.2",
     "rails-erb-loader": "^5.4.1",
     "vue": "^2.5.16",
-    "vue-loader": "^14.2.1",
+    "vue-loader": "^14.2.2",
     "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.16"
   },

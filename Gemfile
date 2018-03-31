@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # FRAMEWORK
-gem 'rails', '5.1.5'
+gem 'rails', '5.1.6'
 gem 'configoro'
 
 # MODELS
@@ -55,7 +55,7 @@ end
 
 group :doc do
   gem 'redcarpet'
-  gem 'yard', require: nil
+  gem 'yard', require: false
 end
 
 group :test do
