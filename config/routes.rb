@@ -11,5 +11,5 @@ Rails.application.routes.draw do
   post 'interact' => 'interactions#handle'
 
   root 'authorization_requests#new'
-  match '*path' => 'home#index', via: :all # Vue-Router handles all the front-end routing (routes.js)
+  match '*path' => 'authorization_requests#new', via: :all # Vue-Router handles all the front-end routing (routes.js)
 end
