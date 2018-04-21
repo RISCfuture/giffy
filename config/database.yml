@@ -14,7 +14,7 @@
 # Configure Using Gemfile
 # gem 'pg'
 #
-default: &default
+shared:
   adapter: postgresql
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
@@ -23,7 +23,6 @@ default: &default
   username: giffy
 
 development:
-  <<: *default
   database: giffy_development
 
   # The specified database role being used to connect to postgres.
@@ -57,7 +56,6 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
   database: giffy_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
@@ -80,7 +78,6 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
   database: giffy_production
   username: giffy
   password: <%= ENV['GIFFY_DATABASE_PASSWORD'] %>
