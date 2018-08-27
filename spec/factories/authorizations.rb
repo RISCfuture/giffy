@@ -22,7 +22,7 @@ FactoryBot.define do
       webhook_token = 24.times.map { ALPHANUM_AC.sample }.join('')
       "https://hooks.slack.com/services/#{team_id}/#{webhook_id}/#{webhook_token}"
     end
-    incoming_webhook_channel '#general'
+    incoming_webhook_channel { '#general' }
     incoming_webhook_config_url do
       "https://#{FFaker::Internet.user_name(team_name)}.slack.com/services/B401C5SPN/#{incoming_webhook_url.split('/').last}"
     end

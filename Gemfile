@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # FRAMEWORK
-gem 'rails', '5.2.0'
+gem 'rails', '5.2.1'
 gem 'configoro'
 gem 'bootsnap'
 
@@ -25,7 +25,6 @@ gem 'autoprefixer-rails'
 # JS
 gem 'webpacker'
 gem 'uglifier'
-gem 'therubyracer', platforms: :ruby
 gem 'turbolinks'
 # JSON
 gem 'jbuilder'
