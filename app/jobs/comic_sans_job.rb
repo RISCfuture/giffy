@@ -22,8 +22,8 @@ class ComicSansJob < SlackCommandJob
     command.reply response_type: 'in_channel',
                   text:          I18n.t('jobs.comicsans.text', user: command.user_name),
                   attachments:   [{
-                                      fallback:  command.text,
-                                      image_url: string.url.to_s
-                                  }]
+                      fallback:  command.text,
+                      image_url: string.url.to_s
+                  }]
   end
 end

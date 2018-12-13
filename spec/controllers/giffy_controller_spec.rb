@@ -29,8 +29,8 @@ RSpec.describe GiffyController, type: :controller do
       expect(WebMock::RequestRegistry.instance.requested_signatures.hash.detect do |sig, _|
         sig.uri.to_s == 'https://test.host:443/response' &&
             (json = JSON.parse(sig.body))['response_type'] == 'in_channel' &&
-            json['text'] != nil &&
-            json['attachments'].first['image_url'] != nil &&
+            !json['text'].nil? &&
+            !json['attachments'].first['image_url'].nil? &&
             json['attachments'].first['attachment_type'] == 'default' &&
             json['attachments'].first['actions']&.first&.fetch('name') == 'audit_gif' &&
             json['attachments'].first['actions']&.first&.fetch('type') == 'button' &&
@@ -41,8 +41,8 @@ RSpec.describe GiffyController, type: :controller do
       expect(WebMock::RequestRegistry.instance.requested_signatures.hash.detect do |sig, _|
         sig.uri.to_s == 'https://test.host:443/response' &&
             (json = JSON.parse(sig.body))['response_type'] == 'in_channel' &&
-            json['text'] != nil &&
-            json['attachments'].first['image_url'] != nil &&
+            !json['text'].nil? &&
+            !json['attachments'].first['image_url'].nil? &&
             json['attachments'].first['attachment_type'] == 'default' &&
             json['attachments'].first['actions'].empty?
       end).not_to be_nil
@@ -61,7 +61,7 @@ RSpec.describe GiffyController, type: :controller do
       expect(stub_response).to have_been_requested
       expect(WebMock::RequestRegistry.instance.requested_signatures.hash.detect do |sig, _|
         sig.uri.to_s == 'https://test.host:443/response' &&
-            (json = JSON.parse(sig.body))['text'] != nil &&
+            !(json = JSON.parse(sig.body))['text'].nil? &&
             json['response_type'] == 'in_channel'
       end).not_to be_nil
     end
@@ -96,8 +96,8 @@ RSpec.describe GiffyController, type: :controller do
         expect(WebMock::RequestRegistry.instance.requested_signatures.hash.detect do |sig, _|
           sig.uri.to_s == 'https://test.host:443/response' &&
               (json = JSON.parse(sig.body))['response_type'] == 'in_channel' &&
-              json['text'] != nil &&
-              json['attachments'].first != nil
+              !json['text'].nil? &&
+              !json['attachments'].first.nil?
         end).not_to be_nil
       end
     end

@@ -2,7 +2,7 @@
 # attribute to the tag with the errors. JavaScript then creates the appropriate
 # visual error display.
 
-ActionView::Base.field_error_proc = Proc.new do |html_tag, instance|
+ActionView::Base.field_error_proc = proc do |html_tag, instance|
   if html_tag.start_with?('<label')
     html_tag
   else

@@ -31,27 +31,27 @@ RSpec.describe LaTeXController, type: :controller do
     end
 
     it "should check for insecure LaTeX" do
-      expect {
+      expect do
         test_slash_command 'latex', :display, authorization: @authorization, overrides: {text: '\\write{}'}
-      }.to raise_error(LaTeX::InsecureCommand)
+      end.to raise_error(LaTeX::InsecureCommand)
     end
 
     it "should error when LaTeX is not installed" do
       allow_any_instance_of(LaTeX).to receive(:system).with('which', 'pdftex').and_return(false)
       allow_any_instance_of(LaTeX).to receive(:system).with('which', 'pdflatex').and_return(false)
 
-      expect {
+      expect do
         test_slash_command 'latex', :display, authorization: @authorization, overrides: {text: 'y=mx+b'}
-      }.to raise_error(LaTeX::BinaryNotInstalled)
+      end.to raise_error(LaTeX::BinaryNotInstalled)
     end
 
     it "should error when LaTeX fails to run" do
       allow_any_instance_of(LaTeX).to receive(:system).with(LaTeX.new('-').send(:pdftex), anything, anything, anything).and_return(false)
       allow_any_instance_of(LaTeX).to receive(:system).with('which', anything).and_call_original
 
-      expect {
+      expect do
         test_slash_command 'latex', :display, authorization: @authorization, overrides: {text: 'y=mx+b'}
-      }.to raise_error(LaTeX::PDFConversionFailed)
+      end.to raise_error(LaTeX::PDFConversionFailed)
     end
 
     it "should error when ImageMagick is not installed" do
@@ -60,9 +60,9 @@ RSpec.describe LaTeXController, type: :controller do
       allow_any_instance_of(LaTeX).to receive(:system).with('which', 'pdflatex').and_call_original
       allow_any_instance_of(LaTeX).to receive(:system).with(LaTeX.new('-').send(:pdftex), anything, anything, anything).and_call_original
 
-      expect {
+      expect do
         test_slash_command 'latex', :display, authorization: @authorization, overrides: {text: 'y=mx+b'}
-      }.to raise_error(LaTeX::BinaryNotInstalled)
+      end.to raise_error(LaTeX::BinaryNotInstalled)
     end
 
     it "should error when ImageMagick fails to run" do
@@ -71,9 +71,9 @@ RSpec.describe LaTeXController, type: :controller do
       allow_any_instance_of(LaTeX).to receive(:system).with('which', anything).and_call_original
       allow_any_instance_of(LaTeX).to receive(:system).with(LaTeX.new('-').send(:pdftex), anything, anything, anything).and_call_original
 
-      expect {
+      expect do
         test_slash_command 'latex', :display, authorization: @authorization, overrides: {text: 'y=mx+b'}
-      }.to raise_error(LaTeX::PNGConversionFailed)
+      end.to raise_error(LaTeX::PNGConversionFailed)
     end
   end
 end

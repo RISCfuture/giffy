@@ -1,7 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
@@ -84,16 +84,16 @@ def test_slash_command(command, action, authorization: nil, overrides: {})
   authorization ||= FactoryBot.create(:authorization)
 
   post action, params: overrides.reverse_merge(
-      channel_id:   'C123ABCD4',
-      channel_name: 'mygroup',
-      command:      "/#{command}",
-      team_domain:  'square',
-      team_id:      authorization.team_id,
-      text:         '',
-      token:        Giffy::Configuration.slack.verification_token,
-      user_id:      'U12AB3CD4',
-      user_name:    'tim',
-      response_url: 'https://test.host/response'
+    channel_id:   'C123ABCD4',
+    channel_name: 'mygroup',
+    command:      "/#{command}",
+    team_domain:  'square',
+    team_id:      authorization.team_id,
+    text:         '',
+    token:        Giffy::Configuration.slack.verification_token,
+    user_id:      'U12AB3CD4',
+    user_name:    'tim',
+    response_url: 'https://test.host/response'
   )
 
   return authorization

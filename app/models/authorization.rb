@@ -49,12 +49,9 @@ class Authorization < ApplicationRecord
 
   def revoke!
     response = Slack.instance.api_command('auth.revoke', token: access_token)
+    raise "Couldn't revoke token: #{response['error']}" unless response['ok'] && response['revoked']
 
-    if response['ok'] && response['revoked']
-      destroy
-    else
-      raise "Couldn't revoke token: #{response['error']}"
-    end
+    destroy
   end
 
   # Calls {Slack#api_command}, providing the access token.

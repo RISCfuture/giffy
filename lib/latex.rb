@@ -54,7 +54,8 @@ class LaTeX
       Dir.mktmpdir(ident) do |output_directory|
         system pdftex, *PDFTEX_OPTIONS, "--output-directory=#{output_directory}", tex_path
         pdf_path = File.join(output_directory, ident + '.pdf')
-        raise PDFConversionFailed.new(self) unless File.exist?(pdf_path)
+        raise PDFConversionFailed, self unless File.exist?(pdf_path)
+
         yield pdf_path
         File.unlink pdf_path
       end
@@ -75,7 +76,8 @@ class LaTeX
       Dir.mktmpdir(ident) do |output_directory|
         png_path = File.join(output_directory, ident + '.png')
         system convert, *CONVERT_OPTIONS, pdf_path, png_path
-        raise PNGConversionFailed.new(self) unless File.exist?(png_path)
+        raise PNGConversionFailed, self unless File.exist?(png_path)
+
         yield png_path
         File.unlink png_path
       end
@@ -95,14 +97,16 @@ class LaTeX
     end
   end
 
+  # @private
+  cattr_reader :url_template, default: Addressable::Template.new(Giffy::Configuration.aws.url_template)
+
   # @return [Addressable::URI] The URL to the uploaded equation image on S3.
   #   This URL will only be valid after {#upload} has been called.
 
   def url
-    @@url_template ||= Addressable::Template.new(Giffy::Configuration.aws.url_template)
-    @@url_template.expand 'bucket' => Giffy::Configuration.aws.bucket,
-                          'region' => Giffy::Configuration.aws.region,
-                          'key'    => key
+    self.class.url_template.expand 'bucket' => Giffy::Configuration.aws.bucket,
+                                   'region' => Giffy::Configuration.aws.region,
+                                   'key'    => key
   end
 
   # @return [true, false] `false` if this equation includes any blacklisted,
@@ -117,16 +121,16 @@ class LaTeX
   # @raise [LaTeX::InsecureCommand] If the equation is insecure.
 
   def check_security!
-    raise InsecureCommand.new(self) unless secure?
+    raise InsecureCommand, self unless secure?
   end
 
   private
 
-  PDFTEX_BINARIES   = %w(pdflatex pdftex)
-  CONVERT_BINARIES  = %w(convert)
-  INSECURE_COMMANDS = %w(\\input \\write \\include)
-  PDFTEX_OPTIONS    = %w(-interaction=nonstopmode)
-  CONVERT_OPTIONS   = %w(-density 300 -quality 90)
+  PDFTEX_BINARIES   = %w[pdflatex pdftex].freeze
+  CONVERT_BINARIES  = %w[convert].freeze
+  INSECURE_COMMANDS = %w[\\input \\write \\include].freeze
+  PDFTEX_OPTIONS    = %w[-interaction=nonstopmode].freeze
+  CONVERT_OPTIONS   = %w[-density 300 -quality 90].freeze
   private_constant :INSECURE_COMMANDS, :PDFTEX_BINARIES, :PDFTEX_OPTIONS,
                    :CONVERT_OPTIONS
 
@@ -135,11 +139,11 @@ class LaTeX
   end
 
   def wrapped_equation
-    <<-LATEX.chomp.strip
-\\documentclass[preview]{standalone}
-\\begin{document}
-$#{sanitized_equation}$
-\\end{document}
+    <<~LATEX.chomp.strip
+      \\documentclass[preview]{standalone}
+      \\begin{document}
+      $#{sanitized_equation}$
+      \\end{document}
     LATEX
   end
 
@@ -154,12 +158,14 @@ $#{sanitized_equation}$
   def pdftex
     pdftex = PDFTEX_BINARIES.detect { |b| system 'which', b }
     raise BinaryNotInstalled.new(self, 'pdftex') unless pdftex
+
     return pdftex
   end
 
   def convert
     convert = CONVERT_BINARIES.detect { |b| system 'which', b }
     raise BinaryNotInstalled.new(self, 'convert') unless convert
+
     return convert
   end
 

@@ -16,7 +16,7 @@ class Google
   #   search API for more information.
   # @raise [Google::UnsuccessfulResponseError] If the API request fails.
 
-  def image_search(query, ip=nil)
+  def image_search(query, _ip=nil)
     url      = image_search_url(query)
     @conn    ||= Faraday.new(url: url.origin)
     response = @conn.get do |request|
@@ -29,7 +29,7 @@ class Google
     html = Nokogiri::HTML(response.body)
     html.css('div.rg_meta').map do |meta|
       JSON.parse(meta.content)['ou']
-    rescue
+    rescue StandardError
       nil
     end.compact
   end
@@ -42,12 +42,12 @@ class Google
 
   def image_search_url(query)
     image_search_template.expand(query: {
-        as_st:  'y',
-        tbm:    'isch',
-        as_q:   query,
-        tbs:    'itp:animated',
-        gws_rd: 'ssl'
-    })
+                                     as_st:  'y',
+                                     tbm:    'isch',
+                                     as_q:   query,
+                                     tbs:    'itp:animated',
+                                     gws_rd: 'ssl'
+                                 })
   end
 
   # Raised when a Google API request fails.

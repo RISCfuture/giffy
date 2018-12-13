@@ -15,11 +15,11 @@ FactoryBot.define do
     scope { Giffy::Configuration.slack.scopes.join(',') }
 
     team_name { FFaker::Company.name }
-    team_id { 'T' + 8.times.map { ALPHANUM.sample }.join('') }
+    team_id { 'T' + Array.new(8) { ALPHANUM.sample }.join('') }
 
     incoming_webhook_url do
-      webhook_id = 'B' + 8.times.map { ALPHANUM.sample }.join('')
-      webhook_token = 24.times.map { ALPHANUM_AC.sample }.join('')
+      webhook_id = 'B' + Array.new(8) { ALPHANUM.sample }.join('')
+      webhook_token = Array.new(24) { ALPHANUM_AC.sample }.join('')
       "https://hooks.slack.com/services/#{team_id}/#{webhook_id}/#{webhook_token}"
     end
     incoming_webhook_channel { '#general' }

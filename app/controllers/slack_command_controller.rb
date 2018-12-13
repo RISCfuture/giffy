@@ -18,7 +18,7 @@ class SlackCommandController < ApplicationController
   protect_from_forgery with: :null_session
 
   rescue_from(Exception) do |error|
-    render status: :internal_server_error, body: "An internal error occurred: #{error.to_s}"
+    render status: :internal_server_error, body: "An internal error occurred: #{error}"
     raise error
   end
 
@@ -29,27 +29,25 @@ class SlackCommandController < ApplicationController
 
   def command
     @command ||= Slack::Command.new(
-        params[:token],
-        params[:team_id],
-        params[:team_domain],
-        params[:channel_id],
-        params[:channel_name],
-        params[:user_id],
-        params[:user_name],
-        params[:command],
-        params[:text],
-        params[:response_url]
+      params[:token],
+      params[:team_id],
+      params[:team_domain],
+      params[:channel_id],
+      params[:channel_name],
+      params[:user_id],
+      params[:user_name],
+      params[:command],
+      params[:text],
+      params[:response_url]
     )
   end
 
   private
 
   def validate_command
-    if command.valid?
-      return true
-    else
-      render status: :unauthorized, body: t('controllers.application.validate_command.invalid')
-      return false
-    end
+    return true if command.valid?
+
+    render status: :unauthorized, body: t('controllers.application.validate_command.invalid')
+    return false
   end
 end

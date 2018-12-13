@@ -2,7 +2,7 @@
 
 ActiveSupport::Reloader.to_prepare do
   ApplicationController.renderer.defaults.merge!(
-      http_host: 'giffy.pro',
-      https:     true
+    http_host: 'giffy.pro',
+    https:     true
   )
 end

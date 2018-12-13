@@ -33,19 +33,19 @@ RSpec.describe ComicSansController, type: :controller do
     it "should error when ImageMagick is not installed" do
       allow_any_instance_of(ComicSans).to receive(:system).with('which', 'convert').and_return(false)
 
-      expect {
+      expect do
         test_slash_command 'comicsans', :display, authorization: @authorization, overrides: {text: "Hello, world!"}
-      }.to raise_error(ComicSans::BinaryNotInstalled)
+      end.to raise_error(ComicSans::BinaryNotInstalled)
     end
 
     it "should error when ImageMagick fails to run" do
       allow_any_instance_of(ComicSans).to receive(:system).with(ComicSans.new('-').send(:convert), anything, anything, anything,
-                                                            anything, anything, anything, anything).and_return(false)
+                                                                anything, anything, anything, anything).and_return(false)
       allow_any_instance_of(ComicSans).to receive(:system).with('which', anything).and_call_original
 
-      expect {
+      expect do
         test_slash_command 'comicsans', :display, authorization: @authorization, overrides: {text: "Hello, world!"}
-      }.to raise_error(ComicSans::PNGConversionFailed)
+      end.to raise_error(ComicSans::PNGConversionFailed)
     end
   end
 end

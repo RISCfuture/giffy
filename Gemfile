@@ -6,13 +6,13 @@ git_source(:github) do |repo_name|
 end
 
 # FRAMEWORK
-gem 'rails', '5.2.2'
-gem 'configoro'
 gem 'bootsnap'
+gem 'configoro'
+gem 'rails', '5.2.2'
 
 # MODELS
-gem 'pg', '< 1.0'
 gem 'find_or_create_on_scopes'
+gem 'pg', '< 1.0'
 gem 'url_validation'
 
 # VIEWS
@@ -20,12 +20,12 @@ gem 'sprockets-rails'
 # HTML
 gem 'slim-rails'
 # CSS
-gem 'sass-rails'
 gem 'autoprefixer-rails'
+gem 'sass-rails'
 # JS
-gem 'webpacker'
-gem 'uglifier'
 gem 'turbolinks'
+gem 'uglifier'
+gem 'webpacker'
 # JSON
 gem 'jbuilder'
 
@@ -45,8 +45,8 @@ gem 'aws-sdk-s3'
 gem 'prawn'
 
 group :development do
-  gem 'puma'
   gem 'listen'
+  gem 'puma'
 
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -60,14 +60,14 @@ end
 
 group :test do
   # SPECS
-  gem 'rspec-rails'
   gem 'rails-controller-testing'
+  gem 'rspec-rails'
 
   # ISOLATION
   gem 'database_cleaner'
+  gem 'fakefs', require: 'fakefs/safe'
   gem 'timecop'
   gem 'webmock'
-  gem 'fakefs', require: 'fakefs/safe'
 
   # FACTORIES
   gem 'factory_bot_rails'

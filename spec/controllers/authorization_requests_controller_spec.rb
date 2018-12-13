@@ -47,9 +47,10 @@ RSpec.describe AuthorizationRequestsController, type: :controller do
       before :each do
         stub_request(:post, 'https://slack.com/api/oauth.access').
             with(body: {
-                'client_id'     => 'YOUR_CLIENT_ID',
-                'client_secret' => 'YOUR_CLIENT_SECRET',
-                'code'          => code}).
+                     'client_id'     => 'YOUR_CLIENT_ID',
+                     'client_secret' => 'YOUR_CLIENT_SECRET',
+                     'code'          => code
+                 }).
             to_return(body: response_body.to_json)
 
         get :create, params: {code: code}

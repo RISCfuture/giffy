@@ -61,9 +61,7 @@ class AuthorizationRequestsController < ApplicationController
   # | `error` | If Slack was unable to complete the authorization, this parameter will contain an identifier for the error. |
 
   def create
-    if params[:error].present?
-      return redirect_to(root_url(error: params[:error]))
-    end
+    return redirect_to(root_url(error: params[:error])) if params[:error].present?
 
     @authorization_request = AuthorizationRequest.create(code: params[:code])
     if @authorization_request.valid?

@@ -16,11 +16,13 @@ class Slack
     post api_url(command), options
   end
 
+  # @private
+  cattr_reader :api_url_template, default: Addressable::Template.new(Giffy::Configuration.slack.api_url_template)
+
   private
 
   def api_url(command)
-    @@api_url_template ||= Addressable::Template.new(Giffy::Configuration.slack.api_url_template)
-    @@api_url_template.expand 'command' => command
+    self.class.api_url_template.expand 'command' => command
   end
 
   def post(url, body)
@@ -29,7 +31,7 @@ class Slack
       c.response :detailed_logger if Rails.env.development?
       c.adapter Faraday.default_adapter
     end
-    resp  = @conn.post do |request|
+    resp = @conn.post do |request|
       request.url url.request_uri
       request.body = body
     end
@@ -59,9 +61,11 @@ class Slack
     begin
       parsed_body = JSON.parse(resp.body)
       raise APIError.new(url, body, resp) unless parsed_body['ok']
+
       return parsed_body
     rescue JSON::ParserError
       raise CallbackError.new(url, body, resp) if resp.body != 'ok'
+
       return resp.body
     end
 
@@ -127,7 +131,7 @@ class Slack
   # Object containing data about a slash-command invocation. See the Slack API
   # to learn about its fields: https://api.slack.com/slash-commands
 
-  class Command < Struct.new(:token, :team_id, :team_domain, :channel_id, :channel_name, :user_id, :user_name, :command, :text, :response_url)
+  Command = Struct.new(:token, :team_id, :team_domain, :channel_id, :channel_name, :user_id, :user_name, :command, :text, :response_url) do
 
     # @overload initialize(token, team_id, team_domain, channel_id, channel_name, user_id, user_name, command, text)
     #  Creates a new command from the given parameters.
@@ -138,7 +142,7 @@ class Slack
     def initialize(*args)
       if args.size == 1 && args.first.kind_of?(Hash)
         hsh = args.first.with_indifferent_access
-        super *members.map { |m| hsh[m] }
+        super(*members.map { |m| hsh[m] })
       else
         super
       end
@@ -168,8 +172,8 @@ class Slack
     #   command.reply text: "Hello, world!", in_channel: true
 
     def reply(body)
-      url  = Addressable::URI.parse(response_url)
-      resp = Slack.instance.send(:callback_post, url, body)
+      url = Addressable::URI.parse(response_url)
+      Slack.instance.send :callback_post, url, body
     end
 
     delegate :api_command, to: :authorization

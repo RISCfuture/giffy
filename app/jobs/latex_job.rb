@@ -24,8 +24,8 @@ class LaTeXJob < SlackCommandJob
     command.reply response_type: 'in_channel',
                   text:          I18n.t('jobs.latex.text', user: command.user_name),
                   attachments:   [{
-                                      fallback:  latex.equation,
-                                      image_url: latex.url.to_s
-                                  }]
+                      fallback:  latex.equation,
+                      image_url: latex.url.to_s
+                  }]
   end
 end

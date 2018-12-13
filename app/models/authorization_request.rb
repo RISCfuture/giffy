@@ -24,13 +24,13 @@
 # | `error`  | Any error identifier provided by the Slack API.                                              |
 
 class AuthorizationRequest < ApplicationRecord
-  enum status: %i(pending working success error)
+  enum status: %i[pending working success error]
 
   belongs_to :authorization, optional: true, inverse_of: :authorization_request
 
   validates :code,
             presence: true,
-            length: {maximum: 128}
+            length:   {maximum: 128}
 
   after_create :spawn_job
 

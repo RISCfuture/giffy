@@ -49,7 +49,8 @@ class ComicSans
       Dir.mktmpdir(ident) do |output_directory|
         png_path = File.join(output_directory, ident + '.png')
         system convert, *CONVERT_OPTIONS, pdf_path, png_path
-        raise PNGConversionFailed.new(self) unless File.exist?(png_path)
+        raise PNGConversionFailed, self unless File.exist?(png_path)
+
         yield png_path
         File.unlink png_path
       end
@@ -69,25 +70,28 @@ class ComicSans
     end
   end
 
+  # @private
+  cattr_reader :url_template, default: Addressable::Template.new(Giffy::Configuration.aws.url_template)
+
   # @return [Addressable::URI] The URL to the uploaded string image on S3. This
   #   URL will only be valid after {#upload} has been called.
 
   def url
-    @@url_template ||= Addressable::Template.new(Giffy::Configuration.aws.url_template)
-    @@url_template.expand 'bucket' => Giffy::Configuration.aws.bucket,
-                          'region' => Giffy::Configuration.aws.region,
-                          'key'    => key
+    self.class.url_template.expand 'bucket' => Giffy::Configuration.aws.bucket,
+                                   'region' => Giffy::Configuration.aws.region,
+                                   'key'    => key
   end
 
   private
 
-  CONVERT_BINARIES  = %w(convert)
-  CONVERT_OPTIONS   = %w(-density 150 -quality 90 -trim)
+  CONVERT_BINARIES  = %w[convert].freeze
+  CONVERT_OPTIONS   = %w[-density 150 -quality 90 -trim].freeze
   private_constant :CONVERT_BINARIES, :CONVERT_OPTIONS
 
   def convert
     convert = CONVERT_BINARIES.detect { |b| system 'which', b }
     raise BinaryNotInstalled.new(self, 'convert') unless convert
+
     return convert
   end
 

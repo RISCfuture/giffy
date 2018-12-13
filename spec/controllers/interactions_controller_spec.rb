@@ -10,7 +10,7 @@ RSpec.describe InteractionsController, type: :controller do
     let(:action_name) { 'other' }
     let(:action_value) { 'other' }
     let(:verification_token) { Giffy::Configuration.slack.verification_token }
-    let(:payload) {
+    let(:payload) do
       {'actions'          => [{'name'  => action_name,
                                'value' => action_value}],
        'callback_id'      => 'TODO',
@@ -23,31 +23,31 @@ RSpec.describe InteractionsController, type: :controller do
        'attachment_id'    => '1',
        'token'            => verification_token,
        'original_message' =>
-           {'text'        => "*@sancho* searched for _coolio_ using /giffy",
-            'username'    => 'Giffy',
-            'bot_id'      => 'B12345678',
-            'attachments' =>
-                [{'fallback'     => 'Another excellent GIF from Giffy',
-                  'image_url'    => 'http://img.memecdn.com/me-when-i-delete-porn_o_727732.gif',
-                  'image_width'  => 267,
-                  'image_height' => 200,
-                  'image_bytes'  => 893900,
-                  'is_animated'  => true,
-                  'callback_id'  => 'TODO',
-                  'id'           => 1,
-                  'actions'      =>
-                      [{'id'    => '1',
-                        'name'  => action_name,
-                        'text'  => 'NopeNopeNope',
-                        'type'  => 'button',
-                        'value' => action_value,
-                        'style' => 'danger'}]}],
-            'type'        => 'message',
-            'subtype'     => 'bot_message',
-            'ts'          => '1486091344.000343'},
+                             {'text'        => "*@sancho* searched for _coolio_ using /giffy",
+                              'username'    => 'Giffy',
+                              'bot_id'      => 'B12345678',
+                              'attachments' =>
+                                               [{'fallback'     => 'Another excellent GIF from Giffy',
+                                                 'image_url'    => 'http://img.memecdn.com/me-when-i-delete-porn_o_727732.gif',
+                                                 'image_width'  => 267,
+                                                 'image_height' => 200,
+                                                 'image_bytes'  => 893_900,
+                                                 'is_animated'  => true,
+                                                 'callback_id'  => 'TODO',
+                                                 'id'           => 1,
+                                                 'actions'      =>
+                                                                   [{'id'    => '1',
+                                                                     'name'  => action_name,
+                                                                     'text'  => 'NopeNopeNope',
+                                                                     'type'  => 'button',
+                                                                     'value' => action_value,
+                                                                     'style' => 'danger'}]}],
+                              'type'        => 'message',
+                              'subtype'     => 'bot_message',
+                              'ts'          => '1486091344.000343'},
        'response_url'     =>
-           "https://hooks.slack.com/actions/#{FFaker::Internet.user_name authorization.team_name}/136384582595/zuIt0HDCbEbBvoV3LbozsV0f"}
-    }
+                             "https://hooks.slack.com/actions/#{FFaker::Internet.user_name authorization.team_name}/136384582595/zuIt0HDCbEbBvoV3LbozsV0f"}
+    end
 
     context '[name=audit_gif]' do
       let(:action_name) { 'audit_gif' }
@@ -57,9 +57,9 @@ RSpec.describe InteractionsController, type: :controller do
 
         it "should delete the message" do
           stub_delete = stub_request(:post, 'https://slack.com/api/chat.delete').
-              with(:body => {'channel' => 'C12345678',
-                             'token'   => authorization.access_token,
-                             'ts'      => '1486091344.000343'}).
+              with(body: {'channel' => 'C12345678',
+                          'token'   => authorization.access_token,
+                          'ts'      => '1486091344.000343'}).
               to_return(body: {'ok' => true}.to_json)
 
           post :handle, params: {payload: payload.to_json}

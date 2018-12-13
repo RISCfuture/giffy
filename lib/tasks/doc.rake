@@ -1,4 +1,4 @@
-if Rails.env.development? then
+if Rails.env.development?
   require 'yard'
   YARD::Rake::YardocTask.new do |doc|
     doc.options << '-m' << 'markdown' << '-M' << 'redcarpet'
@@ -7,6 +7,6 @@ if Rails.env.development? then
     doc.options << '-o' << 'doc/app'
     doc.options << '--title' << "Giffy Documentation'"
 
-    doc.files = %w( app/**/*.rb lib/**/*.rb )
+    doc.files = %w[app/**/*.rb lib/**/*.rb]
   end
 end

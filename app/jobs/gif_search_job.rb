@@ -47,32 +47,30 @@ class GIFSearchJob < SlackCommandJob
     command.reply response_type: 'in_channel',
                   text:          I18n.t('jobs.gif_search.text', user: command.user_name, query: command.text),
                   attachments:   [{
-                                      image_url:       image,
-                                      attachment_type: 'default',
-                                      fallback:        I18n.t('jobs.gif_search.fallback'),
-                                      callback_id:     result_record.id&.to_s || 'nil',
-                                      actions:         [{
-                                                            name:    'audit_gif',
-                                                            text:    I18n.t('jobs.gif_search.actions.delete.title'),
-                                                            type:    'button',
-                                                            value:   'delete',
-                                                            style:   'danger',
-                                                            confirm: {
-                                                                title:        I18n.t('jobs.gif_search.actions.delete.confirm.title'),
-                                                                text:         I18n.t('jobs.gif_search.actions.delete.confirm.text'),
-                                                                ok_text:      I18n.t('jobs.gif_search.actions.delete.confirm.ok'),
-                                                                dismiss_text: I18n.t('jobs.gif_search.actions.delete.confirm.dismiss')
-                                                            }
-                                                        }]
-                                  }]
+                      image_url:       image,
+                      attachment_type: 'default',
+                      fallback:        I18n.t('jobs.gif_search.fallback'),
+                      callback_id:     result_record.id&.to_s || 'nil',
+                      actions:         [{
+                          name:    'audit_gif',
+                          text:    I18n.t('jobs.gif_search.actions.delete.title'),
+                          type:    'button',
+                          value:   'delete',
+                          style:   'danger',
+                          confirm: {
+                              title:        I18n.t('jobs.gif_search.actions.delete.confirm.title'),
+                              text:         I18n.t('jobs.gif_search.actions.delete.confirm.text'),
+                              ok_text:      I18n.t('jobs.gif_search.actions.delete.confirm.ok'),
+                              dismiss_text: I18n.t('jobs.gif_search.actions.delete.confirm.dismiss')
+                          }
+                      }]
+                  }]
   end
 
   def check_command(command)
-    if command.channel_id.start_with?('G')
-      info = command.authorization.api_command('groups.list', exclude_members: true)
-      return info['groups'].any? { |g| g['id'] == command.channel_id }
-    else
-      return true
-    end
+    return true unless command.channel_id.start_with?('G')
+
+    info = command.authorization.api_command('groups.list', exclude_members: true)
+    return info['groups'].any? { |g| g['id'] == command.channel_id }
   end
 end

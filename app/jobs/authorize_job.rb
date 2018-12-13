@@ -21,7 +21,7 @@ class AuthorizeJob < ApplicationJob
     request.update_attribute :status, :success
   rescue Slack::Error => err
     request.update! status: :error, error: err.to_s
-  rescue
+  rescue StandardError
     request.update_attribute :status, :pending
     raise
   end

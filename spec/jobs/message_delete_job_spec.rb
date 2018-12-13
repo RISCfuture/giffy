@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe MessageDeleteJob, type: :job do
   describe '#perform' do
     let(:authorization) { FactoryBot.create :authorization }
-    let(:payload) {
+    let(:payload) do
       {'actions'          => [{'name'  => 'audit_gif',
                                'value' => 'delete'}],
        'callback_id'      => 'TODO',
@@ -16,31 +16,30 @@ RSpec.describe MessageDeleteJob, type: :job do
        'attachment_id'    => '1',
        'token'            => Giffy::Configuration.slack.verification_token,
        'original_message' =>
-           {'text'        => "*@sancho* searched for _coolio_ using /giffy",
-            'username'    => 'Giffy',
-            'bot_id'      => 'B12345678',
-            'attachments' =>
-                [{'fallback'     => 'Another excellent GIF from Giffy',
-                  'image_url'    => 'http://img.memecdn.com/me-when-i-delete-porn_o_727732.gif',
-                  'image_width'  => 267,
-                  'image_height' => 200,
-                  'image_bytes'  => 893900,
-                  'is_animated'  => true,
-                  'callback_id'  => 'TODO',
-                  'id'           => 1,
-                  'actions'      =>
-                      [{'id'    => '1',
-                        'name'  => 'audit_gif',
-                        'text'  => 'NopeNopeNope',
-                        'type'  => 'button',
-                        'value' => 'delete',
-                        'style' => 'danger'}]}],
-            'type'        => 'message',
-            'subtype'     => 'bot_message',
-            'ts'          => '1486091344.000343'},
-       'response_url'     =>
-           'https://test.host/respond'}
-    }
+                             {'text'        => "*@sancho* searched for _coolio_ using /giffy",
+                              'username'    => 'Giffy',
+                              'bot_id'      => 'B12345678',
+                              'attachments' =>
+                                               [{'fallback'     => 'Another excellent GIF from Giffy',
+                                                 'image_url'    => 'http://img.memecdn.com/me-when-i-delete-porn_o_727732.gif',
+                                                 'image_width'  => 267,
+                                                 'image_height' => 200,
+                                                 'image_bytes'  => 893_900,
+                                                 'is_animated'  => true,
+                                                 'callback_id'  => 'TODO',
+                                                 'id'           => 1,
+                                                 'actions'      =>
+                                                                   [{'id'    => '1',
+                                                                     'name'  => 'audit_gif',
+                                                                     'text'  => 'NopeNopeNope',
+                                                                     'type'  => 'button',
+                                                                     'value' => 'delete',
+                                                                     'style' => 'danger'}]}],
+                              'type'        => 'message',
+                              'subtype'     => 'bot_message',
+                              'ts'          => '1486091344.000343'},
+       'response_url'     => 'https://test.host/respond'}
+    end
 
     it "should delete a message" do
       stub_request(:post, 'https://slack.com/api/chat.delete').

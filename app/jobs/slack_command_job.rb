@@ -20,10 +20,10 @@ class SlackCommandJob < ApplicationJob
   # Processes the slash command. Use the `command` instance to interact with
   # the Slack API.
   #
-  # @param [Slack::Command] command Contextual information about the Slack
+  # @param [Slack::Command] _command Contextual information about the Slack
   #   command.
 
-  def perform_command(command, *args)
+  def perform_command(_command, *_args)
     raise NotImplementedError
   end
 end
