@@ -1,17 +1,17 @@
 {
   "dependencies": {
     "@panter/vue-i18next": "^0.9.1",
-    "@rails/webpacker": "3.4",
+    "@rails/webpacker": "3.5",
     "axios": "^0.18.0",
     "i18next": "^10.6.0",
     "i18next-xhr-backend": "^1.5.1",
     "normalize.css": "^8.0.0",
     "precss": "^3.1.2",
-    "rails-erb-loader": "^5.4.1",
-    "vue": "^2.5.16",
-    "vue-loader": "^14.2.2",
+    "rails-erb-loader": "^5.5.0",
+    "vue": "^2.5.21",
+    "vue-loader": "14.2.2",
     "vue-router": "^3.0.1",
-    "vue-template-compiler": "^2.5.16"
+    "vue-template-compiler": "^2.5.21"
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"

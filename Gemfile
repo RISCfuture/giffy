@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 # FRAMEWORK
-gem 'rails', '5.2.1'
+gem 'rails', '5.2.2'
 gem 'configoro'
 gem 'bootsnap'
 
